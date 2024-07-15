@@ -1,0 +1,51 @@
+<html>
+
+<head>
+
+	<title>Editird</title>
+
+	<style>
+		/* body */
+		body {
+			background: #222;
+			color: #d8d8d8;
+		}
+
+		/* texts */
+		.text1 {
+			text-align: center;
+			word-wrap: break-word;
+			display: block;
+			font-family: monospace;
+		}
+
+		.text2 {
+			vertical-align: top;
+			word-wrap: break-word;
+			font-family: monospace;
+		}
+
+		.text2:before {
+			content: "";
+			display: inline-block;
+			width: 0;
+			height: 100%;
+			vertical-align: middle;
+		}
+
+		.text2 p {
+			display: inline-block;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div class="section text1 text2">
+		<p>Hello world!</p>
+	</div>
+
+</body>
+
+</html>

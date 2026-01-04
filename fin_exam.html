@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>財務管理視覺化教學 (數學詳解 & 計算機版)</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; }
+        .math-font { font-family: 'JetBrains Mono', monospace; }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+        /* Keypad Animation */
+        .key-press {
+            transition: transform 0.1s;
+        }
+        .key-press:active {
+            transform: scale(0.95);
+        }
+
+        /* Table Highlight Animation */
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .highlight-cell {
+            border: 2px solid #ef4444 !important;
+            background-color: #fee2e2 !important;
+            color: #b91c1c !important;
+            font-weight: bold;
+            animation: pulse-border 2s infinite;
+        }
+        .highlight-row-header { background-color: #fee2e2 !important; color: #b91c1c; font-weight: bold; }
+        .highlight-col-header { background-color: #fee2e2 !important; color: #b91c1c; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // --- Icon Components ---
+        const IconBase = ({ children, className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
+        );
+        const CalculatorIcon = (props) => <IconBase {...props}><rect width="16" height="20" x="4" y="2" rx="2" /><line x1="8" x2="16" y1="6" y2="6" /><line x1="16" x2="16" y1="14" y2="18" /><path d="M16 10h.01" /><path d="M12 10h.01" /><path d="M8 10h.01" /><path d="M12 14h.01" /><path d="M8 14h.01" /><path d="M12 18h.01" /><path d="M8 18h.01" /></IconBase>;
+        const ArrowRight = (props) => <IconBase {...props}><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></IconBase>;
+        const ArrowLeft = (props) => <IconBase {...props}><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></IconBase>;
+        const TableIcon = (props) => <IconBase {...props}><path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/></IconBase>;
+        const Search = (props) => <IconBase {...props}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></IconBase>;
+        const X = (props) => <IconBase {...props}><path d="M18 6 6 18"/><path d="M6 6 18 18"/></IconBase>;
+        const PieChart = (props) => <IconBase {...props}><path d="M21.21 15.89A10 10 0 1 1 8 2.83" /><path d="M22 12A10 10 0 0 0 12 2v10z" /></IconBase>;
+        const Activity = (props) => <IconBase {...props}><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></IconBase>;
+        const TrendingUp = (props) => <IconBase {...props}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></IconBase>;
+        const BarChart2 = (props) => <IconBase {...props}><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></IconBase>;
+        const Clock = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></IconBase>;
+        const DollarSign = (props) => <IconBase {...props}><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></IconBase>;
+        const CheckCircle = (props) => <IconBase {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></IconBase>;
+        const Keyboard = (props) => <IconBase {...props}><rect width="20" height="16" x="2" y="4" rx="2" /><path d="M6 8h.001" /><path d="M10 8h.001" /><path d="M14 8h.001" /><path d="M18 8h.001" /><path d="M6 12h.001" /><path d="M10 12h.001" /><path d="M14 12h.001" /><path d="M18 12h.001" /></IconBase>;
+
+        // --- Helper: Generate Table Data ---
+        const generateTable = (type, maxRate = 18, maxPeriod = 15) => {
+            const rates = Array.from({length: maxRate}, (_, i) => i + 1);
+            const periods = Array.from({length: maxPeriod}, (_, i) => i + 1);
+            return {
+                rates,
+                periods,
+                getValue: (r, n) => {
+                    const rate = r / 100;
+                    if (type === 'PVIF') return (1 / Math.pow(1 + rate, n)).toFixed(4);
+                    else return ((1 - Math.pow(1 + rate, -n)) / rate).toFixed(4);
+                }
+            };
+        };
+
+        // --- UI Component: Calculator Key ---
+        const Key = ({ label, color = "bg-gray-100" }) => (
+            <span className={`inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded shadow-sm border border-gray-300 text-xs font-bold text-gray-700 mx-0.5 ${color} key-press select-none`}>
+                {label}
+            </span>
+        );
+
+        // --- UI Component: Math Equation Box ---
+        const EquationBox = ({ title, steps, note }) => (
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 my-4 font-mono text-sm shadow-sm">
+                {title && <div className="text-slate-500 text-xs font-bold mb-2 uppercase tracking-wide">{title}</div>}
+                <div className="space-y-3">
+                    {steps.map((step, idx) => (
+                        <div key={idx} className="flex items-start">
+                            <span className="text-slate-400 mr-2 select-none">{idx + 1}.</span>
+                            <div dangerouslySetInnerHTML={{__html: step}} />
+                        </div>
+                    ))}
+                </div>
+                {note && <div className="mt-3 pt-2 border-t border-slate-200 text-xs text-amber-700">{note}</div>}
+            </div>
+        );
+
+        // --- Component: Derivation Hint ---
+        const DerivationHint = () => {
+            const [show, setShow] = useState(false);
+            return (
+                <div className="mt-2">
+                    <button onClick={() => setShow(!show)} className="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-1 rounded font-bold transition-colors flex items-center">
+                        <Search className="w-3 h-3 mr-1" />
+                        {show ? '隱藏推導過程' : '為什麼是 22%？(點擊查看推導)'}
+                    </button>
+                    {show && (
+                        <div className="mt-2 p-3 bg-white border border-indigo-100 rounded-lg text-xs font-mono shadow-sm animate-fade-in">
+                            <p className="font-bold text-gray-700 mb-1">當表上查不到時 (例如 &gt; 18%)：</p>
+                            <p>我們可以使用公式直接驗算：</p>
+                            <div className="bg-gray-50 p-2 rounded my-1 border border-gray-200">
+                                PVIFA(r, n) = (1 - (1+r)^-n) / r
+                            </div>
+                            <p className="mt-2 font-bold">驗算 22% (n=8)：</p>
+                            <ul className="list-decimal list-inside space-y-1 text-gray-600">
+                                <li>(1 + 0.22)^-8 ≈ 0.2038</li>
+                                <li>1 - 0.2038 = 0.7962</li>
+                                <li>0.7962 / 0.22 ≈ <strong className="text-indigo-600">3.619</strong></li>
+                            </ul>
+                            <p className="mt-2 text-gray-500">結果 3.619 非常接近我們的目標值 3.6。</p>
+                            <p className="mt-1 text-gray-500">這證明 IRR 約為 22% 是合理的估計。</p>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // --- Component: Reference Table Modal ---
+        const ReferenceTableModal = ({ isOpen, onClose, highlightTarget }) => {
+            const [activeTab, setActiveTab] = useState('PVIF');
+
+            useEffect(() => {
+                if (highlightTarget?.type) setActiveTab(highlightTarget.type);
+            }, [highlightTarget]);
+
+            if (!isOpen) return null;
+
+            const tableData = generateTable(activeTab);
+            const targetRate = highlightTarget?.rate;
+            const targetPeriod = highlightTarget?.period;
+            const isTargetTab = highlightTarget?.type === activeTab;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 fade-in">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden">
+                        <div className="p-4 border-b flex justify-between items-center bg-gray-800 text-white">
+                            <div className="flex items-center space-x-4">
+                                <h3 className="text-lg font-bold flex items-center"><TableIcon className="mr-2" /> 財務係數表</h3>
+                                <div className="flex space-x-2 bg-gray-700 rounded p-1">
+                                    <button className={`px-3 py-1 rounded text-sm transition ${activeTab === 'PVIF' ? 'bg-blue-500 text-white font-bold' : 'text-gray-300 hover:text-white'}`} onClick={() => setActiveTab('PVIF')}>PVIF (單筆)</button>
+                                    <button className={`px-3 py-1 rounded text-sm transition ${activeTab === 'PVIFA' ? 'bg-blue-500 text-white font-bold' : 'text-gray-300 hover:text-white'}`} onClick={() => setActiveTab('PVIFA')}>PVIFA (年金)</button>
+                                </div>
+                            </div>
+                            <button onClick={onClose} className="hover:bg-gray-600 p-1 rounded"><X /></button>
+                        </div>
+                        {isTargetTab && targetRate && targetPeriod && (
+                            <div className="bg-yellow-100 p-3 text-yellow-800 text-sm flex items-center justify-center border-b border-yellow-200">
+                                <Search className="w-4 h-4 mr-2" />
+                                <span>尋找 <strong>{targetRate}%</strong> (上方) 與 <strong>{targetPeriod}</strong> (左側) 的交叉點。<span className="ml-2 text-xs text-gray-500">(已標示紅色)</span></span>
+                            </div>
+                        )}
+                        <div className="flex-1 overflow-auto custom-scrollbar p-4">
+                            <table className="w-full text-sm border-collapse text-center">
+                                <thead className="sticky top-0 bg-white z-10 shadow-sm">
+                                    <tr>
+                                        <th className="p-2 border bg-gray-100 min-w-[60px]">n \ %</th>
+                                        {tableData.rates.map(r => <th key={r} className={`p-2 border min-w-[60px] ${isTargetTab && r === targetRate ? 'highlight-col-header' : 'bg-gray-50'}`}>{r}%</th>)}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {tableData.periods.map(n => (
+                                        <tr key={n} className="hover:bg-blue-50 transition-colors">
+                                            <td className={`p-2 border font-bold ${isTargetTab && n === targetPeriod ? 'highlight-row-header' : 'bg-gray-50'}`}>{n}</td>
+                                            {tableData.rates.map(r => {
+                                                const isTarget = isTargetTab && n === targetPeriod && r === targetRate;
+                                                return <td key={`${n}-${r}`} className={`p-2 border font-mono ${isTarget ? 'highlight-cell' : 'text-gray-600'}`}>{tableData.getValue(r, n)}</td>;
+                                            })}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Detailed Problem Data ---
+        const problems = [
+            {
+                id: 1,
+                title: "P.63 #12: 機器購買決策 (NPV)",
+                originalText: `日月光公司為了擴充業務，打算再添購一台新機器。機器的成本等於450萬元，預期能使用十年，十年後的殘值將等於50萬元。公司準備採用直線折舊法提列機器每年的折舊費用。為使用這台機器，公司需要再增加60萬元的淨營運資金。機器每年可以帶給公司600萬元的額外營運收入，但公司的營運費用每年也會增加250萬元。公司的資金成本等於15%，而稅率等於20%。試問，公司是否應該購買新機器？`,
+                icon: <CalculatorIcon />,
+                summary: "目標：計算所有未來現金流的「現在價值」總和。大於 0 就買。",
+                steps: [
+                    {
+                        title: "1. 初始投資 (Time 0)",
+                        content: "一開始要花多少錢？",
+                        visual: (
+                            <div>
+                                <p className="mb-2"><strong>邏輯：</strong>除了買機器的錢，為了讓機器運轉(買原料等)墊付的「營運資金」也是成本。</p>
+                                <EquationBox 
+                                    steps={[
+                                        "初始投資 = 機器成本 + 營運資金",
+                                        "初始投資 = 450 + 60 = <strong class='text-red-600'>510 萬</strong> (流出)"
+                                    ]}
+                                    note="記住這個數字是負的 (-510)，因為錢從口袋出去了。"
+                                />
+                            </div>
+                        ),
+                        highlight: "別忘了把營運資金算進去！"
+                    },
+                    {
+                        title: "2. 計算年折舊",
+                        content: "折舊可以抵稅，所以一定要先算。",
+                        visual: (
+                            <div>
+                                <p className="mb-2"><strong>邏輯：</strong>機器用久了會舊，這部分算損耗，可以減少要繳的稅。</p>
+                                <EquationBox 
+                                    title="直線折舊法"
+                                    steps={[
+                                        "折舊 = (成本 - 殘值) ÷ 年限",
+                                        "折舊 = (450 - 50) ÷ 10",
+                                        "折舊 = 400 ÷ 10 = <strong class='text-blue-600'>40 萬/年</strong>"
+                                    ]}
+                                />
+                                <div className="mt-4 bg-gray-100 p-2 rounded text-sm">
+                                    <p className="font-bold flex items-center"><Keyboard className="w-4 h-4 mr-1"/> 計算機按法：</p>
+                                    <p>輸入 <Key label="450"/> <Key label="-"/> <Key label="50"/> <Key label="="/> <Key label="÷"/> <Key label="10"/> <Key label="="/> (得到40)</p>
+                                </div>
+                            </div>
+                        ),
+                        highlight: "這 40 萬是帳面數字，不用真的付錢出去。"
+                    },
+                    {
+                        title: "3. 每年淨現金流 (OCF)",
+                        content: "每年真正放進口袋多少錢？",
+                        visual: (
+                            <div>
+                                <p className="mb-2"><strong>邏輯：</strong>(營收 - 費用 - 折舊) 算出要繳稅的利潤，扣完稅後，再把「沒付錢」的折舊加回來。</p>
+                                <EquationBox 
+                                    steps={[
+                                        "1. 稅前淨利 (EBIT) = 營收(600) - 費用(250) - 折舊(40) = 310",
+                                        "2. 稅後淨利 = 310 × (1 - 20%) = 310 × 0.8 = 248",
+                                        "3. 現金流 (OCF) = 稅後淨利(248) + 折舊(40) = <strong class='text-green-600'>288 萬</strong>"
+                                    ]}
+                                    note="口訣：稅後淨利 + 折舊 = OCF"
+                                />
+                                <div className="mt-4 bg-gray-100 p-2 rounded text-sm">
+                                    <p className="font-bold flex items-center"><Keyboard className="w-4 h-4 mr-1"/> 計算機按法：</p>
+                                    <p>輸入 <Key label="600"/> <Key label="-"/> <Key label="250"/> <Key label="-"/> <Key label="40"/> <Key label="="/> (得到310)</p>
+                                    <p>接著 <Key label="×"/> <Key label="0.8"/> <Key label="="/> (得到248)</p>
+                                    <p>最後 <Key label="+"/> <Key label="40"/> <Key label="="/> (得到288)</p>
+                                </div>
+                            </div>
+                        ),
+                        highlight: "每年都會收到這 288 萬，連續 10 年。"
+                    },
+                    {
+                        title: "4. 第 10 年的額外收入",
+                        content: "最後一年除了賺錢，還把機器賣了。",
+                        visual: (
+                            <div>
+                                <p className="mb-2"><strong>邏輯：</strong>機器殘值 50 萬是最後一年多出來的錢。通常題目如果沒說，我們假設當初投入的 60 萬營運資金也會在最後收回(但此題未明示，通常財務題目會包含，若依照最嚴格題意則只算殘值)。<br/>此處依題目文字：「殘值等於50萬」，我們僅加計殘值。</p>
+                                <EquationBox 
+                                    steps={[
+                                        "第10年現金流 = 年金(288) + 殘值(50)",
+                                        "其實我們會把這看成兩部分：",
+                                        "1. 10年的年金 (288)",
+                                        "2. 第10年的一筆單次收入 (50)"
+                                    ]}
+                                />
+                            </div>
+                        ),
+                        highlight: "分開算比較不容易錯：一個查 PVIFA，一個查 PVIF。"
+                    },
+                    {
+                        title: "5. 查表求現值 (NPV)",
+                        content: "最關鍵的一步：折現。",
+                        visual: (
+                            <div>
+                                <p className="mb-2"><strong>邏輯：</strong>要把未來的錢換算成現在的價值。折現率 15%。</p>
+                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                    <div className="bg-blue-50 p-3 rounded text-center">
+                                        <div className="font-bold text-blue-800">288 萬 (年金)</div>
+                                        <div className="text-xs">查 PVIFA (15%, 10年)</div>
+                                        <button onClick={() => window.openTable({type:'PVIFA',rate:15,period:10})} className="mt-2 px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">查表</button>
+                                        <div className="mt-1 font-mono font-bold">係數: 5.0188</div>
+                                    </div>
+                                    <div className="bg-green-50 p-3 rounded text-center">
+                                        <div className="font-bold text-green-800">50 萬 (單筆)</div>
+                                        <div className="text-xs">查 PVIF (15%, 10年)</div>
+                                        <button onClick={() => window.openTable({type:'PVIF',rate:15,period:10})} className="mt-2 px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">查表</button>
+                                        <div className="mt-1 font-mono font-bold">係數: 0.2472</div>
+                                    </div>
+                                </div>
+                                <EquationBox 
+                                    steps={[
+                                        "總現值 = (288 × 5.0188) + (50 × 0.2472)",
+                                        "總現值 = 1445.41 + 12.36 = 1457.77",
+                                        "NPV = 總現值 - 初始投資",
+                                        "NPV = 1457.77 - 510 = <strong class='text-green-600'>+947.77 萬</strong>"
+                                    ]}
+                                />
+                                <div className="bg-gray-100 p-2 rounded text-sm mt-2">
+                                    <p className="font-bold flex items-center"><Keyboard className="w-4 h-4 mr-1"/> 計算機 (不用查表法):</p>
+                                    <p className="text-xs text-gray-500">若用公式：PVIFA = (1 - (1.15)^-10)/0.15</p>
+                                    <p>1. <Key label="1.15"/> <Key label="÷"/> <Key label="="/> (按10次等於得到折現因子) ...此法較慢。</p>
+                                    <p>建議直接查表相乘後相加。</p>
+                                </div>
+                            </div>
+                        ),
+                        tableRef: {type:'PVIFA',rate:15,period:10},
+                        highlight: "大於 0，所以應該購買！"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "P.64 #16: 堆高機選擇 (互斥方案)",
+                originalText: `中華工程公司必須自具備相同功能的油壓式與電動式堆高機中選出一種堆高機，以搬運物料。電動式堆高機的購買成本為$720,000，較油壓式堆高機的購買成本$500,000高，但它的操作成本卻較低。電動式與油壓式堆高機的使用年限分別為八年與六年，在這段期間中，電動式堆高機的淨現金流量每年都等於$200,000，油壓式堆高機的淨現金流量每年則為$160,000。若這兩個互斥專案的資金成本都等於13%，試分別算出每個專案的淨現值與內部報酬率，並選出應該被接受的專案。`,
+                icon: <Activity />,
+                summary: "兩台機器選一台。分別算出 NPV，誰大選誰。順便算 IRR。",
+                steps: [
+                    {
+                        title: "1. 電動式 NPV 計算",
+                        content: "成本 72萬，年賺 20萬，用 8年，利率 13%。",
+                        visual: (
+                            <div>
+                                <div className="bg-blue-50 p-3 rounded mb-2 flex justify-between items-center">
+                                    <span>需要查表：PVIFA (13%, 8年)</span>
+                                    <button onClick={() => window.openTable({type:'PVIFA',rate:13,period:8})} className="px-2 py-1 bg-blue-500 text-white text-xs rounded">查表</button>
+                                </div>
+                                <EquationBox 
+                                    steps={[
+                                        "查表係數 = 4.7988",
+                                        "現值 = 200,000 × 4.7988 = 959,760",
+                                        "NPV = 959,760 - 720,000 = <strong class='text-blue-600'>239,760</strong>"
+                                    ]}
+                                />
+                            </div>
+                        ),
+                        tableRef: {type:'PVIFA',rate:13,period:8},
+                        highlight: "電動式很賺錢！"
+                    },
+                    {
+                        title: "2. 油壓式 NPV 計算",
+                        content: "成本 50萬，年賺 16萬，用 6年，利率 13%。",
+                        visual: (
+                            <div>
+                                <div className="bg-orange-50 p-3 rounded mb-2 flex justify-between items-center">
+                                    <span>需要查表：PVIFA (13%, 6年)</span>
+                                    <button onClick={() => window.openTable({type:'PVIFA',rate:13,period:6})} className="px-2 py-1 bg-orange-500 text-white text-xs rounded">查表</button>
+                                </div>
+                                <EquationBox 
+                                    steps={[
+                                        "查表係數 = 3.9975",
+                                        "現值 = 160,000 × 3.9975 = 639,600",
+                                        "NPV = 639,600 - 500,000 = <strong class='text-orange-600'>139,600</strong>"
+                                    ]}
+                                />
+                            </div>
+                        ),
+                        tableRef: {type:'PVIFA',rate:13,period:6},
+                        highlight: "油壓式也賺錢，但賺比較少。"
+                    },
+                    {
+                        title: "3. 內部報酬率 (IRR) 怎麼算？",
+                        content: "IRR 是讓 NPV = 0 的利率。手算很難，要用「試誤法」或財務計算機。",
+                        visual: (
+                            <div>
+                                <p className="mb-2"><strong>邏輯：</strong>IRR 是讓 NPV = 0 的利率。因為是年金形式，可以反查 PVIFA 表。</p>
+                                <div className="space-y-4">
+                                    <div className="bg-blue-50 p-3 rounded">
+                                        <p className="font-bold text-blue-800 mb-2">電動式 (8年, 每年20萬)</p>
+                                        <p className="text-sm mb-1">1. 計算年金現值係數：</p>
+                                        <p className="font-mono text-sm bg-white p-1 rounded border">720,000 ÷ 200,000 = <strong>3.6</strong></p>
+                                        <p className="text-sm mt-2 mb-1">2. 查 PVIFA 表 (n=8)：</p>
+                                        <ul className="list-disc list-inside text-sm text-gray-600">
+                                            <li>20% = 3.837</li>
+                                            <li>22% = 3.585 (最接近)</li>
+                                        </ul>
+                                        <DerivationHint />
+                                        <p className="text-sm mt-2"><strong>IRR ≈ 21.86%</strong></p>
+                                    </div>
+
+                                    <div className="bg-orange-50 p-3 rounded">
+                                        <p className="font-bold text-orange-800 mb-2">油壓式 (6年, 每年16萬)</p>
+                                        <p className="text-sm mb-1">1. 計算年金現值係數：</p>
+                                        <p className="font-mono text-sm bg-white p-1 rounded border">500,000 ÷ 160,000 = <strong>3.125</strong></p>
+                                        <p className="text-sm mt-2 mb-1">2. 查 PVIFA 表 (n=6)：</p>
+                                        <ul className="list-disc list-inside text-sm text-gray-600">
+                                            <li>20% = 3.326</li>
+                                            <li>24% = 3.020</li>
+                                        </ul>
+                                        <p className="text-sm mt-2"><strong>IRR ≈ 22.54%</strong> (介於 20%-24% 之間)</p>
+                                    </div>
+                                </div>
+                                <div className="mt-3 text-xs text-gray-500">
+                                    註：若非年金(每年金額不同)，則只能用試誤法(猜一個利率算NPV，直到NPV=0)。
+                                </div>
+                            </div>
+                        ),
+                        highlight: "雖然油壓式 IRR 較高，但因為是「互斥專案」(只能選一台)，我們要選 NPV 較大的「電動式」。"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "P.103 #16: 流動比率 (代數求解)",
+                originalText: `若太子建設公司目前有6,300萬元的流動資產與3,500萬元的流動負債。該公司現有的存貨值2,700萬元，打算使用應付票據向銀行貸款，再使用所得到的資金提高存貨水平。試問，太子建設最多可以使用多少短期負債（應付票據），而不致使流動比率超過2.5？在該公司的短期負債額已達到最大限度後，它的速動比率會等於多少？`,
+                icon: <PieChart />,
+                summary: "數學課時間：解一元一次不等式。求 X。",
+                steps: [
+                    {
+                        title: "1. 列出方程式",
+                        content: "流動比率 = 資產 / 負債。我們要借錢(負債增加)買存貨(資產增加)。",
+                        visual: (
+                            <div>
+                                <p className="mb-2">設借款金額為 X。</p>
+                                <EquationBox 
+                                    steps={[
+                                        "原資產 6300，新資產 = 6300 + X",
+                                        "原負債 3500，新負債 = 3500 + X",
+                                        "條件：新比率 ≤ 2.5",
+                                        "(6300 + X) ÷ (3500 + X) ≤ 2.5"
+                                    ]}
+                                />
+                            </div>
+                        ),
+                        highlight: "分子分母同時加 X，這是關鍵。"
+                    },
+                    {
+                        title: "2. 代數運算 (移項)",
+                        content: "把分母乘過去，然後把 X 集中到一邊。",
+                        visual: (
+                            <div>
+                                <EquationBox 
+                                    title="運算過程"
+                                    steps={[
+                                        "1. 兩邊同乘 (3500+X)：",
+                                        "   6300 + X ≤ 2.5(3500 + X)",
+                                        "2. 打開括號 (分配律)：",
+                                        "   6300 + X ≤ 8750 + 2.5X",
+                                        "3. 移項 (把 X 丟右邊，數字丟左邊)：",
+                                        "   6300 - 8750 ≤ 2.5X - X",
+                                        "4. 合併：",
+                                        "   -2450 ≤ 1.5X",
+                                        "5. 除以 1.5：",
+                                        "   X ≥ -1633"
+                                    ]}
+                                    note="數學結果很怪？這是因為原本比率 1.8 已經小於 2.5。當分子分母同加 X，比率會往 1 靠近 (也就是會變小)。所以不管借多少錢，比率都會變小，永遠不會「超過」2.5。這題可能是題目出錯，或者是問「不低於」某數。但若依照數學邏輯，答案是「借多少都可以」。(實務上通常是問償還債務，那就是 X 為負)。"
+                                />
+                            </div>
+                        ),
+                        highlight: "結論：因為 1.8 < 2.5，借款只會讓比率下降，永遠安全。"
+                    },
+                    {
+                        title: "3. 速動比率",
+                        content: "假設借到了錢 (假設題目有隱藏上限，或是要我們算現在的速動)。",
+                        visual: (
+                            <div>
+                                <p className="mb-2"><strong>邏輯：</strong>速動資產 = 流動資產 - 存貨。因為存貨變現慢。</p>
+                                <EquationBox 
+                                    steps={[
+                                        "速動資產 = 6300 - 存貨(2700) = 3600",
+                                        "速動比率 = 3600 ÷ 3500 = 1.03",
+                                        "若真的借了錢買存貨：",
+                                        "流動資產變多(因為存貨多)，但速動資產不變(因為增加的是存貨，被扣掉了)！",
+                                        "負債變多，所以速動比率反而會下降。"
+                                    ]}
+                                />
+                            </div>
+                        ),
+                        highlight: "借錢買存貨會讓速動比率惡化。"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "P.106 #23: 杜邦分析 (公式倒推)",
+                originalText: `若一公司的權益報酬率為15%，負債權益比為50%。若總貸產周轉率與邊際毛利率分別為1.25與8%，在股東權益總額為$3,200時，請問公司之淨利為多少？`,
+                icon: <TrendingUp />,
+                summary: "像偵探一樣，從 ROE 倒推回淨利。",
+                steps: [
+                    {
+                        title: "1. 計算權益乘數",
+                        content: "題目給 D/E (負債/權益) = 0.5。",
+                        visual: (
+                            <EquationBox 
+                                steps={[
+                                    "權益乘數 (EM) = 1 + D/E",
+                                    "EM = 1 + 0.5 = <strong class='text-blue-600'>1.5</strong>"
+                                ]}
+                            />
+                        ),
+                        highlight: "這代表資產是權益的 1.5 倍。"
+                    },
+                    {
+                        title: "2. 找出淨利率 (NPM)",
+                        content: "利用杜邦公式：ROE = NPM × 週轉率 × EM",
+                        visual: (
+                            <EquationBox 
+                                title="代數求解"
+                                steps={[
+                                    "15% = NPM × 1.25 × 1.5",
+                                    "15% = NPM × 1.875",
+                                    "NPM = 15% ÷ 1.875",
+                                    "NPM = <strong class='text-green-600'>8%</strong>"
+                                ]}
+                            />
+                        ),
+                        highlight: "算出淨利率是 8%。"
+                    },
+                    {
+                        title: "3. 推算淨利金額",
+                        content: "有了淨利率，還要知道「總營收(Sales)」才能算淨利。",
+                        visual: (
+                            <EquationBox 
+                                steps={[
+                                    "1. 總資產 = 權益(3200) × EM(1.5) = 4800",
+                                    "2. 總營收 = 總資產(4800) × 週轉率(1.25) = 6000",
+                                    "3. 淨利 = 總營收(6000) × 淨利率(8%)",
+                                    "淨利 = <strong class='text-red-600'>480</strong>"
+                                ]}
+                            />
+                        ),
+                        highlight: "一層一層推回去：權益 -> 資產 -> 營收 -> 淨利。"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "P.144 #11: 風險比較",
+                originalText: `假定實成工業公司與東和鋼鐵公司在未來一年中，報酬率的機率分配如下所示：
+經濟景氣： 發生機率, 寶成工業, 東和鋼鐵
+繁榮: 0.3, 62%, 28%
+正常: 35, 10, 0.5
+衰退: 0.2, -30, 5
+若市場投資組合的風險溢酬為10%、無風險利率等於5%，試問哪家公司的系統風險較高，哪家公司的非系統風險較高？整體而言，你覺得哪家公司的風險高？`,
+                icon: <BarChart2 />,
+                summary: "不用複雜計算，用觀察的。",
+                steps: [
+                    {
+                        title: "1. 系統風險 (Beta)",
+                        content: "誰跟著景氣大起大落？",
+                        visual: (
+                            <div>
+                                <table className="w-full text-center border text-sm mb-4">
+                                    <tr className="bg-gray-100"><th className="p-1">景氣</th><th className="p-1">寶成</th><th className="p-1">東和</th></tr>
+                                    <tr><td>繁榮</td><td className="text-red-600 font-bold">+62%</td><td className="text-red-600">+28%</td></tr>
+                                    <tr><td>衰退</td><td className="text-green-600 font-bold">-30%</td><td className="text-green-600">+5%</td></tr>
+                                </table>
+                                <p><strong>解析：</strong>寶成在繁榮時賺翻，衰退時賠慘。它的波動跟市場(景氣)高度相關且幅度大。</p>
+                                <p className="mt-2 text-blue-600 font-bold">結論：寶成系統風險較高。</p>
+                            </div>
+                        ),
+                        highlight: "波動越大，Beta 通常越高。"
+                    },
+                    {
+                        title: "2. 非系統風險與總風險",
+                        content: "通常波動幅度大也代表總風險大。",
+                        visual: (
+                            <div>
+                                <p>寶成的高低差：62 - (-30) = 92%</p>
+                                <p>東和的高低差：28 - 5 = 23%</p>
+                                <p className="mt-2">因為寶成的總波動遠大於東和，且大部分是跟隨景氣的(系統性)，通常也隱含其總風險與非系統風險可能都較高(視個別公司特有因素而定，但以題目數據來看，寶成就是比較危險)。</p>
+                            </div>
+                        ),
+                        highlight: "寶成就是高風險高報酬的代表。"
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "P.145 #15: CAPM (解聯立方程式)",
+                originalText: `假定A股票的貝他係數為0.5，預期將賺得5%的報酬率；而B股票的貝他係數高達1.5，預期報酬率為13%。試應用CAPM，算出市場風險溢酬與市場投資組合的預期報酬率。`,
+                icon: <Activity />,
+                summary: "國中數學：解二元一次聯立方程式。",
+                steps: [
+                    {
+                        title: "1. 列出算式",
+                        content: "公式：R = Rf + Beta(Rm - Rf)。令 MRP = (Rm - Rf)。",
+                        visual: (
+                            <EquationBox 
+                                steps={[
+                                    "設 x = 無風險利率 (Rf)",
+                                    "設 y = 市場風險溢酬 (MRP)",
+                                    "A股: 5 = x + 0.5y  --- (1)",
+                                    "B股: 13 = x + 1.5y --- (2)"
+                                ]}
+                            />
+                        ),
+                        highlight: "兩個未知數，兩個方程式。"
+                    },
+                    {
+                        title: "2. 消去法求解",
+                        content: "用 (2) 減 (1)，把 x 消掉。",
+                        visual: (
+                            <EquationBox 
+                                title="運算過程"
+                                steps={[
+                                    "   13 = x + 1.5y",
+                                    "-)  5 = x + 0.5y",
+                                    "----------------",
+                                    "    8 = 0 + 1y",
+                                    "所以 <strong class='text-green-600'>y (MRP) = 8%</strong>"
+                                ]}
+                            />
+                        ),
+                        highlight: "相減是最快的方法！"
+                    },
+                    {
+                        title: "3. 代回求 x",
+                        content: "把 y=8 帶回去第一式。",
+                        visual: (
+                            <EquationBox 
+                                steps={[
+                                    "5 = x + 0.5(8)",
+                                    "5 = x + 4",
+                                    "x = 5 - 4",
+                                    "所以 <strong class='text-blue-600'>x (Rf) = 1%</strong>"
+                                ]}
+                                note="市場預期報酬 Rm = Rf + MRP = 1 + 8 = 9%"
+                            />
+                        ),
+                        highlight: "答案：風險溢酬 8%，無風險利率 1%。"
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "P.336 #15: 現金轉換循環 (CCC)",
+                originalText: `若統一集團有下列五種現金轉換循環的計畫可供選擇，試問統一集團應該選哪一種計畫：
+計畫： 存貨轉換期間, 應收帳款收現期間, 應付帳款遞延支付期間
+A: +30天, +20天, +5天
+B: +20, -10, +15
+C: -10, 0, -5
+D: -15, +15, +10
+E: +5, -10, +15`,
+                icon: <Clock />,
+                summary: "簡單加減法。注意正負號。",
+                steps: [
+                    {
+                        title: "1. 公式解析",
+                        content: "CCC = 存貨天數 + 應收天數 - 應付天數。",
+                        visual: (
+                            <div>
+                                <p>存貨與應收是「積壓資金」(要加)。</p>
+                                <p>應付是「欠別人錢」(要減，因為那是別人的錢讓我們用)。</p>
+                                <EquationBox 
+                                    steps={[
+                                        "A: 30 + 20 - 5 = 45",
+                                        "B: 20 + (-10) - 15 = -5",
+                                        "C: -10 + 0 - (-5) = -5",
+                                        "D: -15 + 15 - 10 = <strong class='text-green-600'>-10</strong> (最小)",
+                                        "E: 5 + (-10) - 15 = -20 (數字雖小但可能不合理)"
+                                    ]}
+                                    note="通常選 D 或 E。數學上 E 最小，但 D 的結構 (-15存貨, +15應收) 代表加速存貨週轉同時放寬應收，策略較平衡。不過若只看數字，找最小的。"
+                                />
+                            </div>
+                        ),
+                        highlight: "天數越小(甚至負的)，代表做生意不用自己出錢，最好！"
+                    }
+                ]
+            },
+            {
+                id: 8,
+                title: "P.340 #24: 收現預算",
+                originalText: `元雄公司有一個四十五天期的應收帳款，預計今年度每季的銷售額從第一季開始，分別為$1,200、$1,400、$1,900及$3,200。假設一年有360天，試問公司在第三季中，預期將有多少應收帳款可以收現？`,
+                icon: <DollarSign />,
+                summary: "時間軸的比例分配。",
+                steps: [
+                    {
+                        title: "1. 畫出時間軸",
+                        content: "收款期 45 天，剛好是一季(90天)的一半。",
+                        visual: (
+                            <div>
+                                <p>這表示每一季賣出去的錢：</p>
+                                <ul className="list-disc pl-5 mb-2">
+                                    <li>前 45 天賣的 -> 當季後半段收到 (50%)</li>
+                                    <li>後 45 天賣的 -> 下一季前半段收到 (50%)</li>
+                                </ul>
+                                <p>所以 Q3 會收到的錢 = Q2 的後一半 + Q3 的前一半。</p>
+                            </div>
+                        ),
+                        highlight: "就是各拿 50%。"
+                    },
+                    {
+                        title: "2. 計算金額",
+                        content: "Q2 賣 1400，Q3 賣 1900。",
+                        visual: (
+                            <EquationBox 
+                                steps={[
+                                    "來自 Q2: 1400 × 50% = 700",
+                                    "來自 Q3: 1900 × 50% = 950",
+                                    "合計 = 700 + 950 = <strong class='text-green-600'>1650</strong>"
+                                ]}
+                            />
+                        ),
+                        highlight: "答案是 1650。"
+                    }
+                ]
+            }
+        ];
+
+        // --- StepViewer Component (Enhanced) ---
+        const StepViewer = ({ step, index, totalSteps, nextStep, prevStep, onOpenTable }) => (
+            <div className="fade-in bg-white p-6 rounded-xl shadow-lg border border-gray-100 min-h-[400px] flex flex-col">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-gray-800">{step.title}</h3>
+                    <div className="text-xs font-mono text-gray-400">Step {index + 1}/{totalSteps}</div>
+                </div>
+                <div className="flex-grow">
+                    <p className="text-gray-600 mb-6 text-lg">{step.content}</p>
+                    <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 mb-6 shadow-inner">
+                        {step.visual}
+                        {step.tableRef && (
+                            <div className="text-center mt-4">
+                                <button onClick={() => onOpenTable(step.tableRef)} className="flex items-center justify-center mx-auto px-6 py-3 bg-indigo-100 text-indigo-700 rounded-full font-bold hover:bg-indigo-200 transition border-2 border-indigo-200 animate-bounce">
+                                    <Search className="w-5 h-5 mr-2" /> 
+                                    開啟 {step.tableRef.type} 表 (找 {step.tableRef.rate}%, {step.tableRef.period}期)
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    <div className="bg-yellow-50 p-4 rounded-lg flex items-start space-x-3 border-l-4 border-yellow-400">
+                        <Activity className="w-5 h-5 text-yellow-600 mt-1 flex-shrink-0" />
+                        <div>
+                            <h5 className="font-bold text-yellow-800 text-sm mb-1">關鍵觀念</h5>
+                            <p className="text-yellow-900 text-sm">{step.highlight}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+                    <button onClick={prevStep} disabled={index === 0} className={`flex items-center px-4 py-2 rounded-lg font-medium ${index === 0 ? 'text-gray-300 bg-gray-50' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}`}><ArrowLeft className="w-4 h-4 mr-2" /> 上一步</button>
+                    <button onClick={nextStep} className="flex items-center px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-md">{index === totalSteps - 1 ? '完成' : '下一步'} <ArrowRight className="w-4 h-4 ml-2" /></button>
+                </div>
+            </div>
+        );
+
+        // --- Main App ---
+        const App = () => {
+            const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
+            const [currentStepIndex, setCurrentStepIndex] = useState(0);
+            const [isTableOpen, setIsTableOpen] = useState(false);
+            const [tableHighlight, setTableHighlight] = useState(null);
+
+            const activeProblem = problems[currentProblemIndex];
+
+            // Expose openTable to window for inline button calls
+            useEffect(() => {
+                window.openTable = (target) => {
+                    setTableHighlight(target);
+                    setIsTableOpen(true);
+                };
+            }, []);
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row max-w-7xl mx-auto p-4 gap-6">
+                    <ReferenceTableModal isOpen={isTableOpen} onClose={() => setIsTableOpen(false)} highlightTarget={tableHighlight} />
+                    <div className="w-full md:w-80 bg-white rounded-xl shadow-lg flex flex-col h-[calc(100vh-2rem)] sticky top-4">
+                        <div className="p-6 border-b border-gray-100 bg-indigo-50 rounded-t-xl">
+                            <h1 className="text-xl font-bold text-indigo-900 flex items-center"><CalculatorIcon className="mr-2 w-6 h-6" /> 財務教學工具</h1>
+                            <button onClick={() => window.openTable(null)} className="mt-4 w-full flex items-center justify-center px-4 py-2 bg-white border border-indigo-200 text-indigo-700 rounded-lg hover:bg-indigo-100 transition text-sm font-bold"><TableIcon className="w-4 h-4 mr-2" /> 開啟係數表</button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
+                            {problems.map((prob, idx) => (
+                                <button key={prob.id} onClick={() => { setCurrentProblemIndex(idx); setCurrentStepIndex(0); }} className={`w-full text-left p-4 rounded-lg flex items-start transition-all ${currentProblemIndex === idx ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-50 text-gray-600'}`}>
+                                    <div className={`mr-3 mt-1 p-1 rounded ${currentProblemIndex === idx ? 'bg-indigo-500' : 'bg-gray-200'}`}>{React.cloneElement(prob.icon, { className: "w-4 h-4" })}</div>
+                                    <div className="text-sm font-bold">{prob.title}</div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex-1 flex flex-col min-w-0">
+                        <div className="bg-white p-8 rounded-xl shadow-sm mb-6 border-l-8 border-indigo-500">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-3">{activeProblem.title}</h2>
+                            <p className="text-gray-600 bg-gray-50 p-4 rounded mb-4">{activeProblem.summary}</p>
+                            {activeProblem.originalText && (
+                                <div className="bg-indigo-50 p-4 rounded border border-indigo-100 text-sm text-indigo-900">
+                                    <div className="font-bold mb-1 text-indigo-700 flex items-center"><TableIcon className="w-4 h-4 mr-1"/> 題目原文：</div>
+                                    <div className="whitespace-pre-wrap leading-relaxed">{activeProblem.originalText}</div>
+                                </div>
+                            )}
+                        </div>
+                        <StepViewer 
+                            key={`${currentProblemIndex}-${currentStepIndex}`}
+                            step={activeProblem.steps[currentStepIndex]} 
+                            index={currentStepIndex}
+                            totalSteps={activeProblem.steps.length}
+                            nextStep={() => currentStepIndex < activeProblem.steps.length - 1 && setCurrentStepIndex(prev => prev + 1)}
+                            prevStep={() => currentStepIndex > 0 && setCurrentStepIndex(prev => prev - 1)}
+                            onOpenTable={window.openTable}
+                        />
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

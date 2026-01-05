@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>財務管理視覺化教學 (數學詳解 & 計算機版)</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -12,13 +12,18 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; }
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: #f8fafc;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
         .math-font { font-family: 'JetBrains Mono', monospace; }
         .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; transform: translateY(10px); }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
         
         /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
@@ -46,9 +51,86 @@
         }
         .highlight-row-header { background-color: #fee2e2 !important; color: #b91c1c; font-weight: bold; }
         .highlight-col-header { background-color: #fee2e2 !important; color: #b91c1c; font-weight: bold; }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .mobile-text-sm { font-size: 0.875rem; }
+            .mobile-text-xs { font-size: 0.75rem; }
+            .mobile-p-2 { padding: 0.5rem; }
+            .mobile-p-3 { padding: 0.75rem; }
+            .mobile-p-4 { padding: 1rem; }
+            .mobile-py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+            .mobile-py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+            .mobile-px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .mobile-px-4 { padding-left: 1rem; padding-right: 1rem; }
+            .mobile-space-y-2 > * + * { margin-top: 0.5rem; }
+            .mobile-space-y-3 > * + * { margin-top: 0.75rem; }
+            .mobile-space-y-4 > * + * { margin-top: 1rem; }
+            .mobile-leading-relaxed { line-height: 1.625; }
+            .mobile-rounded-lg { border-radius: 0.5rem; }
+            .mobile-rounded-xl { border-radius: 0.75rem; }
+            .mobile-min-h-screen { min-height: 100vh; }
+            .mobile-h-auto { height: auto; }
+            .mobile-max-h-60 { max-height: 15rem; }
+            .mobile-overflow-auto { overflow: auto; }
+            .mobile-sticky-top-0 { position: sticky; top: 0; z-index: 10; }
+            .mobile-flex-col { flex-direction: column; }
+            .mobile-w-full { width: 100%; }
+            .mobile-text-center { text-align: center; }
+            .mobile-text-lg { font-size: 1.125rem; }
+            .mobile-text-xl { font-size: 1.25rem; }
+            .mobile-text-2xl { font-size: 1.5rem; }
+            .mobile-gap-4 { gap: 1rem; }
+            .mobile-mb-2 { margin-bottom: 0.5rem; }
+            .mobile-mb-3 { margin-bottom: 0.75rem; }
+            .mobile-mb-4 { margin-bottom: 1rem; }
+            .mobile-mb-6 { margin-bottom: 1.5rem; }
+            .mobile-mt-2 { margin-top: 0.5rem; }
+            .mobile-mt-3 { margin-top: 0.75rem; }
+            .mobile-mt-4 { margin-top: 1rem; }
+            .mobile-mt-6 { margin-top: 1.5rem; }
+            .mobile-pt-4 { padding-top: 1rem; }
+            .mobile-border-t { border-top-width: 1px; }
+            .mobile-border-b { border-bottom-width: 1px; }
+            .mobile-border-l-4 { border-left-width: 4px; }
+            .mobile-shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+            .mobile-shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+            .mobile-shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        }
+
+        /* Prevent horizontal scroll on mobile */
+        .mobile-overflow-hidden { overflow-x: hidden; }
+
+        /* Better touch targets */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Modal for mobile */
+        .mobile-modal-content {
+            width: 95%;
+            max-height: 90vh;
+            margin: 2vh auto;
+        }
+
+        /* Table responsive */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Hide scrollbar for cleaner look on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
-<body>
+<body class="mobile-overflow-hidden">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -72,6 +154,7 @@
         const DollarSign = (props) => <IconBase {...props}><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></IconBase>;
         const CheckCircle = (props) => <IconBase {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></IconBase>;
         const Keyboard = (props) => <IconBase {...props}><rect width="20" height="16" x="2" y="4" rx="2" /><path d="M6 8h.001" /><path d="M10 8h.001" /><path d="M14 8h.001" /><path d="M18 8h.001" /><path d="M6 12h.001" /><path d="M10 12h.001" /><path d="M14 12h.001" /><path d="M18 12h.001" /></IconBase>;
+        const MenuIcon = (props) => <IconBase {...props}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></IconBase>;
 
         // --- Helper: Generate Table Data ---
         const generateTable = (type, maxRate = 18, maxPeriod = 15) => {
@@ -90,24 +173,24 @@
 
         // --- UI Component: Calculator Key ---
         const Key = ({ label, color = "bg-gray-100" }) => (
-            <span className={`inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded shadow-sm border border-gray-300 text-xs font-bold text-gray-700 mx-0.5 ${color} key-press select-none`}>
+            <span className={`inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded shadow-sm border border-gray-300 text-xs font-bold text-gray-700 mx-0.5 ${color} key-press select-none touch-target`}>
                 {label}
             </span>
         );
 
         // --- UI Component: Math Equation Box ---
         const EquationBox = ({ title, steps, note }) => (
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 my-4 font-mono text-sm shadow-sm">
-                {title && <div className="text-slate-500 text-xs font-bold mb-2 uppercase tracking-wide">{title}</div>}
-                <div className="space-y-3">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 md:p-4 my-3 md:my-4 font-mono text-sm md:text-base mobile-text-sm mobile-p-3 mobile-rounded-lg mobile-space-y-2">
+                {title && <div className="text-slate-500 text-xs font-bold mb-2 uppercase tracking-wide mobile-text-xs mobile-mb-2">{title}</div>}
+                <div className="space-y-2 md:space-y-3">
                     {steps.map((step, idx) => (
                         <div key={idx} className="flex items-start">
-                            <span className="text-slate-400 mr-2 select-none">{idx + 1}.</span>
-                            <div dangerouslySetInnerHTML={{__html: step}} />
+                            <span className="text-slate-400 mr-2 select-none mobile-text-xs">{idx + 1}.</span>
+                            <div dangerouslySetInnerHTML={{__html: step}} className="mobile-leading-relaxed" />
                         </div>
                     ))}
                 </div>
-                {note && <div className="mt-3 pt-2 border-t border-slate-200 text-xs text-amber-700">{note}</div>}
+                {note && <div className="mt-2 md:mt-3 pt-2 border-t border-slate-200 text-xs text-amber-700 mobile-text-xs mobile-mt-2 mobile-pt-2">{note}</div>}
             </div>
         );
 
@@ -116,19 +199,19 @@
             const [show, setShow] = useState(false);
             return (
                 <div className="mt-2">
-                    <button onClick={() => setShow(!show)} className="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-1 rounded font-bold transition-colors flex items-center">
+                    <button onClick={() => setShow(!show)} className="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-3 py-2 rounded font-bold transition-colors flex items-center justify-center w-full touch-target mobile-py-2 mobile-px-3">
                         <Search className="w-3 h-3 mr-1" />
                         {show ? '隱藏推導過程' : '為什麼是 22%？(點擊查看推導)'}
                     </button>
                     {show && (
-                        <div className="mt-2 p-3 bg-white border border-indigo-100 rounded-lg text-xs font-mono shadow-sm animate-fade-in">
+                        <div className="mt-2 p-3 bg-white border border-indigo-100 rounded-lg text-xs font-mono shadow-sm animate-fade-in mobile-text-xs mobile-p-3">
                             <p className="font-bold text-gray-700 mb-1">當表上查不到時 (例如 &gt; 18%)：</p>
                             <p>我們可以使用公式直接驗算：</p>
-                            <div className="bg-gray-50 p-2 rounded my-1 border border-gray-200">
+                            <div className="bg-gray-50 p-2 rounded my-1 border border-gray-200 mobile-p-2">
                                 PVIFA(r, n) = (1 - (1+r)^-n) / r
                             </div>
                             <p className="mt-2 font-bold">驗算 22% (n=8)：</p>
-                            <ul className="list-decimal list-inside space-y-1 text-gray-600">
+                            <ul className="list-decimal list-inside space-y-1 text-gray-600 mobile-space-y-1">
                                 <li>(1 + 0.22)^-8 ≈ 0.2038</li>
                                 <li>1 - 0.2038 = 0.7962</li>
                                 <li>0.7962 / 0.22 ≈ <strong className="text-indigo-600">3.619</strong></li>
@@ -157,44 +240,49 @@
             const isTargetTab = highlightTarget?.type === activeTab;
 
             return (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 fade-in">
-                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden">
-                        <div className="p-4 border-b flex justify-between items-center bg-gray-800 text-white">
-                            <div className="flex items-center space-x-4">
-                                <h3 className="text-lg font-bold flex items-center"><TableIcon className="mr-2" /> 財務係數表</h3>
-                                <div className="flex space-x-2 bg-gray-700 rounded p-1">
-                                    <button className={`px-3 py-1 rounded text-sm transition ${activeTab === 'PVIF' ? 'bg-blue-500 text-white font-bold' : 'text-gray-300 hover:text-white'}`} onClick={() => setActiveTab('PVIF')}>PVIF (單筆)</button>
-                                    <button className={`px-3 py-1 rounded text-sm transition ${activeTab === 'PVIFA' ? 'bg-blue-500 text-white font-bold' : 'text-gray-300 hover:text-white'}`} onClick={() => setActiveTab('PVIFA')}>PVIFA (年金)</button>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-2 md:p-4 fade-in mobile-p-2">
+                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[90vh] md:h-[80vh] flex flex-col overflow-hidden mobile-modal-content">
+                        <div className="p-3 md:p-4 border-b flex justify-between items-center bg-gray-800 text-white mobile-p-3">
+                            <div className="flex items-center space-x-2 md:space-x-4">
+                                <h3 className="text-base md:text-lg font-bold flex items-center"><TableIcon className="mr-2 w-4 h-4 md:w-5 md:h-5" /> 財務係數表</h3>
+                                <div className="flex space-x-1 md:space-x-2 bg-gray-700 rounded p-1">
+                                    <button className={`px-2 py-1 md:px-3 md:py-1 rounded text-xs md:text-sm transition ${activeTab === 'PVIF' ? 'bg-blue-500 text-white font-bold' : 'text-gray-300 hover:text-white'}`} onClick={() => setActiveTab('PVIF')}>PVIF</button>
+                                    <button className={`px-2 py-1 md:px-3 md:py-1 rounded text-xs md:text-sm transition ${activeTab === 'PVIFA' ? 'bg-blue-500 text-white font-bold' : 'text-gray-300 hover:text-white'}`} onClick={() => setActiveTab('PVIFA')}>PVIFA</button>
                                 </div>
                             </div>
-                            <button onClick={onClose} className="hover:bg-gray-600 p-1 rounded"><X /></button>
+                            <button onClick={onClose} className="hover:bg-gray-600 p-1 rounded touch-target"><X className="w-5 h-5" /></button>
                         </div>
                         {isTargetTab && targetRate && targetPeriod && (
-                            <div className="bg-yellow-100 p-3 text-yellow-800 text-sm flex items-center justify-center border-b border-yellow-200">
-                                <Search className="w-4 h-4 mr-2" />
-                                <span>尋找 <strong>{targetRate}%</strong> (上方) 與 <strong>{targetPeriod}</strong> (左側) 的交叉點。<span className="ml-2 text-xs text-gray-500">(已標示紅色)</span></span>
+                            <div className="bg-yellow-100 p-2 md:p-3 text-yellow-800 text-xs md:text-sm flex items-center justify-center border-b border-yellow-200 mobile-text-xs mobile-p-2">
+                                <Search className="w-3 h-3 md:w-4 md:h-4 mr-2" />
+                                <span>尋找 <strong>{targetRate}%</strong> (上方) 與 <strong>{targetPeriod}</strong> (左側) 的交叉點。<span className="ml-1 md:ml-2 text-xs text-gray-500">(已標示紅色)</span></span>
                             </div>
                         )}
-                        <div className="flex-1 overflow-auto custom-scrollbar p-4">
-                            <table className="w-full text-sm border-collapse text-center">
-                                <thead className="sticky top-0 bg-white z-10 shadow-sm">
-                                    <tr>
-                                        <th className="p-2 border bg-gray-100 min-w-[60px]">n \ %</th>
-                                        {tableData.rates.map(r => <th key={r} className={`p-2 border min-w-[60px] ${isTargetTab && r === targetRate ? 'highlight-col-header' : 'bg-gray-50'}`}>{r}%</th>)}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {tableData.periods.map(n => (
-                                        <tr key={n} className="hover:bg-blue-50 transition-colors">
-                                            <td className={`p-2 border font-bold ${isTargetTab && n === targetPeriod ? 'highlight-row-header' : 'bg-gray-50'}`}>{n}</td>
-                                            {tableData.rates.map(r => {
-                                                const isTarget = isTargetTab && n === targetPeriod && r === targetRate;
-                                                return <td key={`${n}-${r}`} className={`p-2 border font-mono ${isTarget ? 'highlight-cell' : 'text-gray-600'}`}>{tableData.getValue(r, n)}</td>;
-                                            })}
+                        <div className="flex-1 overflow-auto custom-scrollbar p-2 md:p-4">
+                            <div className="table-responsive">
+                                <table className="w-full text-xs md:text-sm border-collapse text-center min-w-[500px]">
+                                    <thead className="sticky top-0 bg-white z-10 shadow-sm">
+                                        <tr>
+                                            <th className="p-1 md:p-2 border bg-gray-100 min-w-[50px] md:min-w-[60px]">n \ %</th>
+                                            {tableData.rates.map(r => <th key={r} className={`p-1 md:p-2 border min-w-[50px] md:min-w-[60px] ${isTargetTab && r === targetRate ? 'highlight-col-header' : 'bg-gray-50'}`}>{r}%</th>)}
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {tableData.periods.map(n => (
+                                            <tr key={n} className="hover:bg-blue-50 transition-colors">
+                                                <td className={`p-1 md:p-2 border font-bold ${isTargetTab && n === targetPeriod ? 'highlight-row-header' : 'bg-gray-50'}`}>{n}</td>
+                                                {tableData.rates.map(r => {
+                                                    const isTarget = isTargetTab && n === targetPeriod && r === targetRate;
+                                                    return <td key={`${n}-${r}`} className={`p-1 md:p-2 border font-mono ${isTarget ? 'highlight-cell' : 'text-gray-600'}`}>{tableData.getValue(r, n)}</td>;
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="p-3 border-t bg-gray-50 flex justify-end mobile-p-3">
+                            <button onClick={onClose} className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium touch-target">關閉</button>
                         </div>
                     </div>
                 </div>
@@ -215,7 +303,7 @@
                         content: "一開始要花多少錢？",
                         visual: (
                             <div>
-                                <p className="mb-2"><strong>邏輯：</strong>除了買機器的錢，為了讓機器運轉(買原料等)墊付的「營運資金」也是成本。</p>
+                                <p className="mb-2 mobile-text-sm mobile-mb-2"><strong>邏輯：</strong>除了買機器的錢，為了讓機器運轉(買原料等)墊付的「營運資金」也是成本。</p>
                                 <EquationBox 
                                     steps={[
                                         "初始投資 = 機器成本 + 營運資金",
@@ -232,7 +320,7 @@
                         content: "折舊可以抵稅，所以一定要先算。",
                         visual: (
                             <div>
-                                <p className="mb-2"><strong>邏輯：</strong>機器用久了會舊，這部分算損耗，可以減少要繳的稅。</p>
+                                <p className="mb-2 mobile-text-sm mobile-mb-2"><strong>邏輯：</strong>機器用久了會舊，這部分算損耗，可以減少要繳的稅。</p>
                                 <EquationBox 
                                     title="直線折舊法"
                                     steps={[
@@ -241,8 +329,8 @@
                                         "折舊 = 400 ÷ 10 = <strong class='text-blue-600'>40 萬/年</strong>"
                                     ]}
                                 />
-                                <div className="mt-4 bg-gray-100 p-2 rounded text-sm">
-                                    <p className="font-bold flex items-center"><Keyboard className="w-4 h-4 mr-1"/> 計算機按法：</p>
+                                <div className="mt-3 md:mt-4 bg-gray-100 p-2 rounded text-xs md:text-sm mobile-p-2 mobile-text-xs mobile-mt-3">
+                                    <p className="font-bold flex items-center"><Keyboard className="w-3 h-3 md:w-4 md:h-4 mr-1"/> 計算機按法：</p>
                                     <p>輸入 <Key label="450"/> <Key label="-"/> <Key label="50"/> <Key label="="/> <Key label="÷"/> <Key label="10"/> <Key label="="/> (得到40)</p>
                                 </div>
                             </div>
@@ -254,7 +342,7 @@
                         content: "每年真正放進口袋多少錢？",
                         visual: (
                             <div>
-                                <p className="mb-2"><strong>邏輯：</strong>(營收 - 費用 - 折舊) 算出要繳稅的利潤，扣完稅後，再把「沒付錢」的折舊加回來。</p>
+                                <p className="mb-2 mobile-text-sm mobile-mb-2"><strong>邏輯：</strong>(營收 - 費用 - 折舊) 算出要繳稅的利潤，扣完稅後，再把「沒付錢」的折舊加回來。</p>
                                 <EquationBox 
                                     steps={[
                                         "1. 稅前淨利 (EBIT) = 營收(600) - 費用(250) - 折舊(40) = 310",
@@ -263,8 +351,8 @@
                                     ]}
                                     note="口訣：稅後淨利 + 折舊 = OCF"
                                 />
-                                <div className="mt-4 bg-gray-100 p-2 rounded text-sm">
-                                    <p className="font-bold flex items-center"><Keyboard className="w-4 h-4 mr-1"/> 計算機按法：</p>
+                                <div className="mt-3 md:mt-4 bg-gray-100 p-2 rounded text-xs md:text-sm mobile-p-2 mobile-text-xs mobile-mt-3">
+                                    <p className="font-bold flex items-center"><Keyboard className="w-3 h-3 md:w-4 md:h-4 mr-1"/> 計算機按法：</p>
                                     <p>輸入 <Key label="600"/> <Key label="-"/> <Key label="250"/> <Key label="-"/> <Key label="40"/> <Key label="="/> (得到310)</p>
                                     <p>接著 <Key label="×"/> <Key label="0.8"/> <Key label="="/> (得到248)</p>
                                     <p>最後 <Key label="+"/> <Key label="40"/> <Key label="="/> (得到288)</p>
@@ -278,7 +366,7 @@
                         content: "最後一年除了賺錢，還把機器賣了。",
                         visual: (
                             <div>
-                                <p className="mb-2"><strong>邏輯：</strong>機器殘值 50 萬是最後一年多出來的錢。通常題目如果沒說，我們假設當初投入的 60 萬營運資金也會在最後收回(但此題未明示，通常財務題目會包含，若依照最嚴格題意則只算殘值)。<br/>此處依題目文字：「殘值等於50萬」，我們僅加計殘值。</p>
+                                <p className="mb-2 mobile-text-sm mobile-mb-2"><strong>邏輯：</strong>機器殘值 50 萬是最後一年多出來的錢。通常題目如果沒說，我們假設當初投入的 60 萬營運資金也會在最後收回(但此題未明示，通常財務題目會包含，若依照最嚴格題意則只算殘值)。<br/>此處依題目文字：「殘值等於50萬」，我們僅加計殘值。</p>
                                 <EquationBox 
                                     steps={[
                                         "第10年現金流 = 年金(288) + 殘值(50)",
@@ -296,19 +384,19 @@
                         content: "最關鍵的一步：折現。",
                         visual: (
                             <div>
-                                <p className="mb-2"><strong>邏輯：</strong>要把未來的錢換算成現在的價值。折現率 15%。</p>
-                                <div className="grid grid-cols-2 gap-4 mb-4">
-                                    <div className="bg-blue-50 p-3 rounded text-center">
-                                        <div className="font-bold text-blue-800">288 萬 (年金)</div>
-                                        <div className="text-xs">查 PVIFA (15%, 10年)</div>
-                                        <button onClick={() => window.openTable({type:'PVIFA',rate:15,period:10})} className="mt-2 px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">查表</button>
-                                        <div className="mt-1 font-mono font-bold">係數: 5.0188</div>
+                                <p className="mb-2 mobile-text-sm mobile-mb-2"><strong>邏輯：</strong>要把未來的錢換算成現在的價值。折現率 15%。</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4 mobile-gap-4 mobile-mb-3">
+                                    <div className="bg-blue-50 p-3 rounded text-center mobile-p-3">
+                                        <div className="font-bold text-blue-800 text-sm md:text-base mobile-text-sm">288 萬 (年金)</div>
+                                        <div className="text-xs mobile-text-xs">查 PVIFA (15%, 10年)</div>
+                                        <button onClick={() => window.openTable({type:'PVIFA',rate:15,period:10})} className="mt-1 md:mt-2 px-3 py-2 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 touch-target w-full mobile-py-2 mobile-px-3">查表</button>
+                                        <div className="mt-1 font-mono font-bold text-xs md:text-sm mobile-text-xs">係數: 5.0188</div>
                                     </div>
-                                    <div className="bg-green-50 p-3 rounded text-center">
-                                        <div className="font-bold text-green-800">50 萬 (單筆)</div>
-                                        <div className="text-xs">查 PVIF (15%, 10年)</div>
-                                        <button onClick={() => window.openTable({type:'PVIF',rate:15,period:10})} className="mt-2 px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600">查表</button>
-                                        <div className="mt-1 font-mono font-bold">係數: 0.2472</div>
+                                    <div className="bg-green-50 p-3 rounded text-center mobile-p-3">
+                                        <div className="font-bold text-green-800 text-sm md:text-base mobile-text-sm">50 萬 (單筆)</div>
+                                        <div className="text-xs mobile-text-xs">查 PVIF (15%, 10年)</div>
+                                        <button onClick={() => window.openTable({type:'PVIF',rate:15,period:10})} className="mt-1 md:mt-2 px-3 py-2 bg-green-500 text-white text-xs rounded hover:bg-green-600 touch-target w-full mobile-py-2 mobile-px-3">查表</button>
+                                        <div className="mt-1 font-mono font-bold text-xs md:text-sm mobile-text-xs">係數: 0.2472</div>
                                     </div>
                                 </div>
                                 <EquationBox 
@@ -319,9 +407,9 @@
                                         "NPV = 1457.77 - 510 = <strong class='text-green-600'>+947.77 萬</strong>"
                                     ]}
                                 />
-                                <div className="bg-gray-100 p-2 rounded text-sm mt-2">
-                                    <p className="font-bold flex items-center"><Keyboard className="w-4 h-4 mr-1"/> 計算機 (不用查表法):</p>
-                                    <p className="text-xs text-gray-500">若用公式：PVIFA = (1 - (1.15)^-10)/0.15</p>
+                                <div className="bg-gray-100 p-2 rounded text-xs md:text-sm mt-2 mobile-p-2 mobile-text-xs mobile-mt-2">
+                                    <p className="font-bold flex items-center"><Keyboard className="w-3 h-3 md:w-4 md:h-4 mr-1"/> 計算機 (不用查表法):</p>
+                                    <p className="text-xs text-gray-500 mobile-text-xs">若用公式：PVIFA = (1 - (1.15)^-10)/0.15</p>
                                     <p>1. <Key label="1.15"/> <Key label="÷"/> <Key label="="/> (按10次等於得到折現因子) ...此法較慢。</p>
                                     <p>建議直接查表相乘後相加。</p>
                                 </div>
@@ -335,7 +423,7 @@
             {
                 id: 2,
                 title: "P.64 #16: 堆高機選擇 (互斥方案)",
-                originalText: `中華工程公司必須自具備相同功能的油壓式與電動式堆高機中選出一種堆高機，以搬運物料。電動式堆高機的購買成本為$720,000，較油壓式堆高機的購買成本$500,000高，但它的操作成本卻較低。電動式與油壓式堆高機的使用年限分別為八年與六年，在這段期間中，電動式堆高機的淨現金流量每年都等於$200,000，油壓式堆高機的淨現金流量每年則為$160,000。若這兩個互斥專案的資金成本都等於13%，試分別算出每個專案的淨現值與內部報酬率，並選出應該被接受的專案。`,
+                originalText: `中華工程公司必須自具備相同功能的油壓式與電動式堆高機中選出一種堆高機，以搬運物料。電動式堆高機的購買成本為$720,000，較油壓式堆高機的購買成本$500,000高，但它的操作成本卻較低。電動式與油壓式堆高機的使用年限分別為八年與六年，在這段期間中，電動式堆高機的淨現金流量每年都等於$200,000，油壓式堆高機的淨現金流量每年則等於$160,000。若這兩個互斥專案的資金成本都等於13%，試分別算出每個專案的淨現值與內部報酬率，並選出應該被接受的專案。`,
                 icon: <Activity />,
                 summary: "兩台機器選一台。分別算出 NPV，誰大選誰。順便算 IRR。",
                 steps: [
@@ -344,9 +432,9 @@
                         content: "成本 72萬，年賺 20萬，用 8年，利率 13%。",
                         visual: (
                             <div>
-                                <div className="bg-blue-50 p-3 rounded mb-2 flex justify-between items-center">
-                                    <span>需要查表：PVIFA (13%, 8年)</span>
-                                    <button onClick={() => window.openTable({type:'PVIFA',rate:13,period:8})} className="px-2 py-1 bg-blue-500 text-white text-xs rounded">查表</button>
+                                <div className="bg-blue-50 p-3 rounded mb-2 flex justify-between items-center mobile-p-3 mobile-mb-2">
+                                    <span className="text-sm mobile-text-sm">需要查表：PVIFA (13%, 8年)</span>
+                                    <button onClick={() => window.openTable({type:'PVIFA',rate:13,period:8})} className="px-3 py-2 bg-blue-500 text-white text-xs rounded touch-target mobile-py-2 mobile-px-3">查表</button>
                                 </div>
                                 <EquationBox 
                                     steps={[
@@ -365,9 +453,9 @@
                         content: "成本 50萬，年賺 16萬，用 6年，利率 13%。",
                         visual: (
                             <div>
-                                <div className="bg-orange-50 p-3 rounded mb-2 flex justify-between items-center">
-                                    <span>需要查表：PVIFA (13%, 6年)</span>
-                                    <button onClick={() => window.openTable({type:'PVIFA',rate:13,period:6})} className="px-2 py-1 bg-orange-500 text-white text-xs rounded">查表</button>
+                                <div className="bg-orange-50 p-3 rounded mb-2 flex justify-between items-center mobile-p-3 mobile-mb-2">
+                                    <span className="text-sm mobile-text-sm">需要查表：PVIFA (13%, 6年)</span>
+                                    <button onClick={() => window.openTable({type:'PVIFA',rate:13,period:6})} className="px-3 py-2 bg-orange-500 text-white text-xs rounded touch-target mobile-py-2 mobile-px-3">查表</button>
                                 </div>
                                 <EquationBox 
                                     steps={[
@@ -386,34 +474,34 @@
                         content: "IRR 是讓 NPV = 0 的利率。手算很難，要用「試誤法」或財務計算機。",
                         visual: (
                             <div>
-                                <p className="mb-2"><strong>邏輯：</strong>IRR 是讓 NPV = 0 的利率。因為是年金形式，可以反查 PVIFA 表。</p>
-                                <div className="space-y-4">
-                                    <div className="bg-blue-50 p-3 rounded">
-                                        <p className="font-bold text-blue-800 mb-2">電動式 (8年, 每年20萬)</p>
-                                        <p className="text-sm mb-1">1. 計算年金現值係數：</p>
-                                        <p className="font-mono text-sm bg-white p-1 rounded border">720,000 ÷ 200,000 = <strong>3.6</strong></p>
-                                        <p className="text-sm mt-2 mb-1">2. 查 PVIFA 表 (n=8)：</p>
-                                        <ul className="list-disc list-inside text-sm text-gray-600">
+                                <p className="mb-2 mobile-text-sm mobile-mb-2"><strong>邏輯：</strong>IRR 是讓 NPV = 0 的利率。因為是年金形式，可以反查 PVIFA 表。</p>
+                                <div className="space-y-3 md:space-y-4 mobile-space-y-4">
+                                    <div className="bg-blue-50 p-3 rounded mobile-p-3">
+                                        <p className="font-bold text-blue-800 mb-2 text-sm md:text-base mobile-text-sm">電動式 (8年, 每年20萬)</p>
+                                        <p className="text-xs md:text-sm mb-1 mobile-text-xs">1. 計算年金現值係數：</p>
+                                        <p className="font-mono text-xs md:text-sm bg-white p-1 rounded border mobile-text-xs mobile-p-1">720,000 ÷ 200,000 = <strong>3.6</strong></p>
+                                        <p className="text-xs md:text-sm mt-2 mb-1 mobile-text-xs mobile-mt-2">2. 查 PVIFA 表 (n=8)：</p>
+                                        <ul className="list-disc list-inside text-xs md:text-sm text-gray-600 mobile-text-xs">
                                             <li>20% = 3.837</li>
                                             <li>22% = 3.585 (最接近)</li>
                                         </ul>
                                         <DerivationHint />
-                                        <p className="text-sm mt-2"><strong>IRR ≈ 21.86%</strong></p>
+                                        <p className="text-xs md:text-sm mt-2 mobile-text-xs mobile-mt-2"><strong>IRR ≈ 21.86%</strong></p>
                                     </div>
 
-                                    <div className="bg-orange-50 p-3 rounded">
-                                        <p className="font-bold text-orange-800 mb-2">油壓式 (6年, 每年16萬)</p>
-                                        <p className="text-sm mb-1">1. 計算年金現值係數：</p>
-                                        <p className="font-mono text-sm bg-white p-1 rounded border">500,000 ÷ 160,000 = <strong>3.125</strong></p>
-                                        <p className="text-sm mt-2 mb-1">2. 查 PVIFA 表 (n=6)：</p>
-                                        <ul className="list-disc list-inside text-sm text-gray-600">
+                                    <div className="bg-orange-50 p-3 rounded mobile-p-3">
+                                        <p className="font-bold text-orange-800 mb-2 text-sm md:text-base mobile-text-sm">油壓式 (6年, 每年16萬)</p>
+                                        <p className="text-xs md:text-sm mb-1 mobile-text-xs">1. 計算年金現值係數：</p>
+                                        <p className="font-mono text-xs md:text-sm bg-white p-1 rounded border mobile-text-xs mobile-p-1">500,000 ÷ 160,000 = <strong>3.125</strong></p>
+                                        <p className="text-xs md:text-sm mt-2 mb-1 mobile-text-xs mobile-mt-2">2. 查 PVIFA 表 (n=6)：</p>
+                                        <ul className="list-disc list-inside text-xs md:text-sm text-gray-600 mobile-text-xs">
                                             <li>20% = 3.326</li>
                                             <li>24% = 3.020</li>
                                         </ul>
-                                        <p className="text-sm mt-2"><strong>IRR ≈ 22.54%</strong> (介於 20%-24% 之間)</p>
+                                        <p className="text-xs md:text-sm mt-2 mobile-text-xs mobile-mt-2"><strong>IRR ≈ 22.54%</strong> (介於 20%-24% 之間)</p>
                                     </div>
                                 </div>
-                                <div className="mt-3 text-xs text-gray-500">
+                                <div className="mt-3 text-xs text-gray-500 mobile-text-xs mobile-mt-3">
                                     註：若非年金(每年金額不同)，則只能用試誤法(猜一個利率算NPV，直到NPV=0)。
                                 </div>
                             </div>
@@ -434,7 +522,7 @@
                         content: "流動比率 = 資產 / 負債。我們要借錢(負債增加)買存貨(資產增加)。",
                         visual: (
                             <div>
-                                <p className="mb-2">設借款金額為 X。</p>
+                                <p className="mb-2 mobile-text-sm mobile-mb-2">設借款金額為 X。</p>
                                 <EquationBox 
                                     steps={[
                                         "原資產 6300，新資產 = 6300 + X",
@@ -477,7 +565,7 @@
                         content: "假設借到了錢 (假設題目有隱藏上限，或是要我們算現在的速動)。",
                         visual: (
                             <div>
-                                <p className="mb-2"><strong>邏輯：</strong>速動資產 = 流動資產 - 存貨。因為存貨變現慢。</p>
+                                <p className="mb-2 mobile-text-sm mobile-mb-2"><strong>邏輯：</strong>速動資產 = 流動資產 - 存貨。因為存貨變現慢。</p>
                                 <EquationBox 
                                     steps={[
                                         "速動資產 = 6300 - 存貨(2700) = 3600",
@@ -563,13 +651,15 @@
                         content: "誰跟著景氣大起大落？",
                         visual: (
                             <div>
-                                <table className="w-full text-center border text-sm mb-4">
-                                    <tr className="bg-gray-100"><th className="p-1">景氣</th><th className="p-1">寶成</th><th className="p-1">東和</th></tr>
-                                    <tr><td>繁榮</td><td className="text-red-600 font-bold">+62%</td><td className="text-red-600">+28%</td></tr>
-                                    <tr><td>衰退</td><td className="text-green-600 font-bold">-30%</td><td className="text-green-600">+5%</td></tr>
-                                </table>
-                                <p><strong>解析：</strong>寶成在繁榮時賺翻，衰退時賠慘。它的波動跟市場(景氣)高度相關且幅度大。</p>
-                                <p className="mt-2 text-blue-600 font-bold">結論：寶成系統風險較高。</p>
+                                <div className="table-responsive">
+                                    <table className="w-full text-center border text-xs md:text-sm mb-3 md:mb-4 min-w-[300px]">
+                                        <tr className="bg-gray-100"><th className="p-1 md:p-2">景氣</th><th className="p-1 md:p-2">寶成</th><th className="p-1 md:p-2">東和</th></tr>
+                                        <tr><td className="p-1 md:p-2">繁榮</td><td className="text-red-600 font-bold p-1 md:p-2">+62%</td><td className="text-red-600 p-1 md:p-2">+28%</td></tr>
+                                        <tr><td className="p-1 md:p-2">衰退</td><td className="text-green-600 font-bold p-1 md:p-2">-30%</td><td className="text-green-600 p-1 md:p-2">+5%</td></tr>
+                                    </table>
+                                </div>
+                                <p className="mobile-text-sm"><strong>解析：</strong>寶成在繁榮時賺翻，衰退時賠慘。它的波動跟市場(景氣)高度相關且幅度大。</p>
+                                <p className="mt-2 text-blue-600 font-bold mobile-text-sm mobile-mt-2">結論：寶成系統風險較高。</p>
                             </div>
                         ),
                         highlight: "波動越大，Beta 通常越高。"
@@ -579,9 +669,9 @@
                         content: "通常波動幅度大也代表總風險大。",
                         visual: (
                             <div>
-                                <p>寶成的高低差：62 - (-30) = 92%</p>
-                                <p>東和的高低差：28 - 5 = 23%</p>
-                                <p className="mt-2">因為寶成的總波動遠大於東和，且大部分是跟隨景氣的(系統性)，通常也隱含其總風險與非系統風險可能都較高(視個別公司特有因素而定，但以題目數據來看，寶成就是比較危險)。</p>
+                                <p className="mobile-text-sm">寶成的高低差：62 - (-30) = 92%</p>
+                                <p className="mobile-text-sm">東和的高低差：28 - 5 = 23%</p>
+                                <p className="mt-2 mobile-text-sm mobile-mt-2">因為寶成的總波動遠大於東和，且大部分是跟隨景氣的(系統性)，通常也隱含其總風險與非系統風險可能都較高(視個別公司特有因素而定，但以題目數據來看，寶成就是比較危險)。</p>
                             </div>
                         ),
                         highlight: "寶成就是高風險高報酬的代表。"
@@ -663,8 +753,8 @@ E: +5, -10, +15`,
                         content: "CCC = 存貨天數 + 應收天數 - 應付天數。",
                         visual: (
                             <div>
-                                <p>存貨與應收是「積壓資金」(要加)。</p>
-                                <p>應付是「欠別人錢」(要減，因為那是別人的錢讓我們用)。</p>
+                                <p className="mobile-text-sm">存貨與應收是「積壓資金」(要加)。</p>
+                                <p className="mobile-text-sm">應付是「欠別人錢」(要減，因為那是別人的錢讓我們用)。</p>
                                 <EquationBox 
                                     steps={[
                                         "A: 30 + 20 - 5 = 45",
@@ -693,12 +783,12 @@ E: +5, -10, +15`,
                         content: "收款期 45 天，剛好是一季(90天)的一半。",
                         visual: (
                             <div>
-                                <p>這表示每一季賣出去的錢：</p>
-                                <ul className="list-disc pl-5 mb-2">
+                                <p className="mobile-text-sm">這表示每一季賣出去的錢：</p>
+                                <ul className="list-disc pl-5 mb-2 mobile-text-sm mobile-mb-2">
                                     <li>前 45 天賣的 -> 當季後半段收到 (50%)</li>
                                     <li>後 45 天賣的 -> 下一季前半段收到 (50%)</li>
                                 </ul>
-                                <p>所以 Q3 會收到的錢 = Q2 的後一半 + Q3 的前一半。</p>
+                                <p className="mobile-text-sm">所以 Q3 會收到的錢 = Q2 的後一半 + Q3 的前一半。</p>
                             </div>
                         ),
                         highlight: "就是各拿 50%。"
@@ -723,35 +813,35 @@ E: +5, -10, +15`,
 
         // --- StepViewer Component (Enhanced) ---
         const StepViewer = ({ step, index, totalSteps, nextStep, prevStep, onOpenTable }) => (
-            <div className="fade-in bg-white p-6 rounded-xl shadow-lg border border-gray-100 min-h-[400px] flex flex-col">
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold text-gray-800">{step.title}</h3>
-                    <div className="text-xs font-mono text-gray-400">Step {index + 1}/{totalSteps}</div>
+            <div className="fade-in bg-white p-4 md:p-6 rounded-xl shadow-lg border border-gray-100 min-h-[400px] flex flex-col mobile-p-4 mobile-rounded-xl mobile-min-h-screen mobile-h-auto mobile-flex-col mobile-space-y-4">
+                <div className="flex justify-between items-center mb-3 md:mb-4">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-800 mobile-text-lg">{step.title}</h3>
+                    <div className="text-xs font-mono text-gray-400 mobile-text-xs">Step {index + 1}/{totalSteps}</div>
                 </div>
                 <div className="flex-grow">
-                    <p className="text-gray-600 mb-6 text-lg">{step.content}</p>
-                    <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 mb-6 shadow-inner">
+                    <p className="text-gray-600 mb-4 md:mb-6 text-base md:text-lg mobile-text-sm mobile-mb-4">{step.content}</p>
+                    <div className="bg-slate-50 p-4 md:p-6 rounded-lg border border-slate-200 mb-4 md:mb-6 shadow-inner mobile-p-4 mobile-mb-4">
                         {step.visual}
                         {step.tableRef && (
-                            <div className="text-center mt-4">
-                                <button onClick={() => onOpenTable(step.tableRef)} className="flex items-center justify-center mx-auto px-6 py-3 bg-indigo-100 text-indigo-700 rounded-full font-bold hover:bg-indigo-200 transition border-2 border-indigo-200 animate-bounce">
-                                    <Search className="w-5 h-5 mr-2" /> 
+                            <div className="text-center mt-3 md:mt-4 mobile-mt-3">
+                                <button onClick={() => onOpenTable(step.tableRef)} className="flex items-center justify-center mx-auto px-4 py-3 md:px-6 md:py-3 bg-indigo-100 text-indigo-700 rounded-full font-bold hover:bg-indigo-200 transition border-2 border-indigo-200 animate-bounce touch-target w-full md:w-auto mobile-py-3 mobile-px-4">
+                                    <Search className="w-4 h-4 md:w-5 md:h-5 mr-2" /> 
                                     開啟 {step.tableRef.type} 表 (找 {step.tableRef.rate}%, {step.tableRef.period}期)
                                 </button>
                             </div>
                         )}
                     </div>
-                    <div className="bg-yellow-50 p-4 rounded-lg flex items-start space-x-3 border-l-4 border-yellow-400">
-                        <Activity className="w-5 h-5 text-yellow-600 mt-1 flex-shrink-0" />
+                    <div className="bg-yellow-50 p-3 md:p-4 rounded-lg flex items-start space-x-3 border-l-4 border-yellow-400 mobile-p-3 mobile-border-l-4">
+                        <Activity className="w-4 h-4 md:w-5 md:h-5 text-yellow-600 mt-1 flex-shrink-0" />
                         <div>
-                            <h5 className="font-bold text-yellow-800 text-sm mb-1">關鍵觀念</h5>
-                            <p className="text-yellow-900 text-sm">{step.highlight}</p>
+                            <h5 className="font-bold text-yellow-800 text-xs md:text-sm mb-1 mobile-text-xs">關鍵觀念</h5>
+                            <p className="text-yellow-900 text-xs md:text-sm mobile-text-xs">{step.highlight}</p>
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
-                    <button onClick={prevStep} disabled={index === 0} className={`flex items-center px-4 py-2 rounded-lg font-medium ${index === 0 ? 'text-gray-300 bg-gray-50' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}`}><ArrowLeft className="w-4 h-4 mr-2" /> 上一步</button>
-                    <button onClick={nextStep} className="flex items-center px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-md">{index === totalSteps - 1 ? '完成' : '下一步'} <ArrowRight className="w-4 h-4 ml-2" /></button>
+                <div className="flex justify-between mt-4 md:mt-6 pt-3 md:pt-4 border-t border-gray-100 mobile-mt-4 mobile-pt-4 mobile-border-t mobile-flex mobile-justify-between mobile-space-x-2">
+                    <button onClick={prevStep} disabled={index === 0} className={`flex items-center px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium touch-target ${index === 0 ? 'text-gray-300 bg-gray-50' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'} mobile-px-3 mobile-py-2 mobile-text-sm`}><ArrowLeft className="w-3 h-3 md:w-4 md:h-4 mr-2" /> 上一步</button>
+                    <button onClick={nextStep} className="flex items-center px-4 py-2 md:px-6 md:py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-md touch-target mobile-px-4 mobile-py-2 mobile-text-sm">{index === totalSteps - 1 ? '完成' : '下一步'} <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-2" /></button>
                 </div>
             </div>
         );
@@ -762,6 +852,7 @@ E: +5, -10, +15`,
             const [currentStepIndex, setCurrentStepIndex] = useState(0);
             const [isTableOpen, setIsTableOpen] = useState(false);
             const [tableHighlight, setTableHighlight] = useState(null);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
 
             const activeProblem = problems[currentProblemIndex];
 
@@ -773,31 +864,67 @@ E: +5, -10, +15`,
                 };
             }, []);
 
+            // Close sidebar when clicking outside on mobile
+            useEffect(() => {
+                const handleClickOutside = (e) => {
+                    if (window.innerWidth < 768 && sidebarOpen) {
+                        const sidebar = document.querySelector('.sidebar-container');
+                        if (sidebar && !sidebar.contains(e.target)) {
+                            setSidebarOpen(false);
+                        }
+                    }
+                };
+                document.addEventListener('mousedown', handleClickOutside);
+                return () => document.removeEventListener('mousedown', handleClickOutside);
+            }, [sidebarOpen]);
+
             return (
-                <div className="min-h-screen flex flex-col md:flex-row max-w-7xl mx-auto p-4 gap-6">
+                <div className="min-h-screen flex flex-col md:flex-row max-w-7xl mx-auto p-2 md:p-4 gap-4 md:gap-6 relative mobile-p-2 mobile-gap-4">
                     <ReferenceTableModal isOpen={isTableOpen} onClose={() => setIsTableOpen(false)} highlightTarget={tableHighlight} />
-                    <div className="w-full md:w-80 bg-white rounded-xl shadow-lg flex flex-col h-[calc(100vh-2rem)] sticky top-4">
-                        <div className="p-6 border-b border-gray-100 bg-indigo-50 rounded-t-xl">
-                            <h1 className="text-xl font-bold text-indigo-900 flex items-center"><CalculatorIcon className="mr-2 w-6 h-6" /> 財務教學工具</h1>
-                            <button onClick={() => window.openTable(null)} className="mt-4 w-full flex items-center justify-center px-4 py-2 bg-white border border-indigo-200 text-indigo-700 rounded-lg hover:bg-indigo-100 transition text-sm font-bold"><TableIcon className="w-4 h-4 mr-2" /> 開啟係數表</button>
+                    
+                    {/* Mobile Sidebar Toggle */}
+                    <div className="md:hidden fixed top-4 left-4 z-30">
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="bg-indigo-600 text-white p-2 rounded-lg shadow-lg touch-target">
+                            <MenuIcon className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {/* Sidebar */}
+                    <div className={`sidebar-container fixed md:relative inset-y-0 left-0 z-20 w-72 md:w-80 bg-white rounded-xl md:rounded-xl shadow-lg md:shadow-lg flex flex-col h-full md:h-[calc(100vh-2rem)] md:sticky md:top-4 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} mobile-w-72`}>
+                        <div className="p-4 md:p-6 border-b border-gray-100 bg-indigo-50 rounded-t-xl md:rounded-t-xl mobile-p-4">
+                            <h1 className="text-lg md:text-xl font-bold text-indigo-900 flex items-center"><CalculatorIcon className="mr-2 w-5 h-5 md:w-6 md:h-6" /> 財務教學工具</h1>
+                            <button onClick={() => { window.openTable(null); setSidebarOpen(false); }} className="mt-4 w-full flex items-center justify-center px-4 py-2 bg-white border border-indigo-200 text-indigo-700 rounded-lg hover:bg-indigo-100 transition text-sm font-bold touch-target mobile-py-2 mobile-px-4">
+                                <TableIcon className="w-4 h-4 mr-2" /> 開啟係數表
+                            </button>
                         </div>
-                        <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
+                        <div className="flex-1 overflow-y-auto p-2 md:p-3 space-y-1 md:space-y-2 custom-scrollbar no-scrollbar mobile-p-2 mobile-space-y-1">
                             {problems.map((prob, idx) => (
-                                <button key={prob.id} onClick={() => { setCurrentProblemIndex(idx); setCurrentStepIndex(0); }} className={`w-full text-left p-4 rounded-lg flex items-start transition-all ${currentProblemIndex === idx ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-50 text-gray-600'}`}>
-                                    <div className={`mr-3 mt-1 p-1 rounded ${currentProblemIndex === idx ? 'bg-indigo-500' : 'bg-gray-200'}`}>{React.cloneElement(prob.icon, { className: "w-4 h-4" })}</div>
-                                    <div className="text-sm font-bold">{prob.title}</div>
+                                <button key={prob.id} onClick={() => { 
+                                    setCurrentProblemIndex(idx); 
+                                    setCurrentStepIndex(0); 
+                                    setSidebarOpen(false);
+                                }} className={`w-full text-left p-3 md:p-4 rounded-lg flex items-start transition-all touch-target ${currentProblemIndex === idx ? 'bg-indigo-600 text-white shadow-md' : 'hover:bg-gray-50 text-gray-600'} mobile-p-3`}>
+                                    <div className={`mr-3 mt-1 p-1 rounded ${currentProblemIndex === idx ? 'bg-indigo-500' : 'bg-gray-200'}`}>{React.cloneElement(prob.icon, { className: "w-3 h-3 md:w-4 md:h-4" })}</div>
+                                    <div className="text-xs md:text-sm font-bold mobile-text-xs">{prob.title}</div>
                                 </button>
                             ))}
                         </div>
                     </div>
-                    <div className="flex-1 flex flex-col min-w-0">
-                        <div className="bg-white p-8 rounded-xl shadow-sm mb-6 border-l-8 border-indigo-500">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-3">{activeProblem.title}</h2>
-                            <p className="text-gray-600 bg-gray-50 p-4 rounded mb-4">{activeProblem.summary}</p>
+
+                    {/* Overlay for mobile sidebar */}
+                    {sidebarOpen && (
+                        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-10" onClick={() => setSidebarOpen(false)}></div>
+                    )}
+
+                    {/* Main Content */}
+                    <div className="flex-1 flex flex-col min-w-0 mt-12 md:mt-0">
+                        <div className="bg-white p-4 md:p-8 rounded-xl shadow-sm mb-4 md:mb-6 border-l-4 md:border-l-8 border-indigo-500 mobile-p-4 mobile-mb-4 mobile-border-l-4">
+                            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2 md:mb-3 mobile-text-xl mobile-mb-2">{activeProblem.title}</h2>
+                            <p className="text-gray-600 bg-gray-50 p-3 md:p-4 rounded mb-3 md:mb-4 text-sm md:text-base mobile-text-sm mobile-p-3 mobile-mb-3">{activeProblem.summary}</p>
                             {activeProblem.originalText && (
-                                <div className="bg-indigo-50 p-4 rounded border border-indigo-100 text-sm text-indigo-900">
-                                    <div className="font-bold mb-1 text-indigo-700 flex items-center"><TableIcon className="w-4 h-4 mr-1"/> 題目原文：</div>
-                                    <div className="whitespace-pre-wrap leading-relaxed">{activeProblem.originalText}</div>
+                                <div className="bg-indigo-50 p-3 md:p-4 rounded border border-indigo-100 text-xs md:text-sm text-indigo-900 mobile-p-3 mobile-text-xs">
+                                    <div className="font-bold mb-1 text-indigo-700 flex items-center"><TableIcon className="w-3 h-3 md:w-4 md:h-4 mr-1"/> 題目原文：</div>
+                                    <div className="whitespace-pre-wrap leading-relaxed max-h-32 md:max-h-40 overflow-y-auto custom-scrollbar mobile-max-h-32">{activeProblem.originalText}</div>
                                 </div>
                             )}
                         </div>

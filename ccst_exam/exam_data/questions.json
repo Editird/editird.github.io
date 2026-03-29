@@ -59,7 +59,7 @@
       "answer": "1",
       "answerType": "single-choice",
       "image": "exam_data/images/q004.png",
-      "text": "請將清單所列的每個通訊協定，與對應的正確TCP/IP模型層進行配對。\n【通訊協定】：A.TCP B.IP C.FTP D.乙太網路\n【TCP模型層】：1. 應用程式 2. 傳輸 3. 網際網路 4. 網路\n1. A3 B1 C2 D4\n2. D3 B1 C2 A4\n3. A3 C1 B2 D4\n4. D3 C1 B2 A4",
+      "text": "請將清單所列的每個通訊協定，與對應的正確TCP/IP模型層進行配對。\n【通訊協定】：A.TCP B.IP C.FTP D.乙太網路\n【TCP模型層】：1. 應用程式 2. 傳輸 3. 網際網路 4. 網路\n1. A2 B3 C1 D4\n2. D3 B1 C2 A4\n3. A3 C1 B2 D4\n4. D3 C1 B2 A4",
       "useImage": false,
       "note": ""
     },
@@ -368,7 +368,7 @@
       "section": "single",
       "number": 27,
       "page": 10,
-      "answer": "45321",
+      "answer": "54312",
       "answerType": "multi-digit",
       "image": "exam_data/images/q030.png",
       "text": "請將每個通訊協定或裝置類型，取對應的正確OSI層。\nA.「線、集線器丶NIC」\nB.「第2層交換器」\nC.「路由器」\nD.「SMTP丶HTTP丶FTP」\nE.「TCP、UDP」\n1. 應用程式\n2. 傳輸\n3. 網路\n4. 資料連結\n5. 實體",

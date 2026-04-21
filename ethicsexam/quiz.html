@@ -12,7 +12,6 @@
       color-scheme: light;
       --bg: #f5f1e8;
       --panel: rgba(255, 255, 255, 0.84);
-      --panel-solid: #ffffff;
       --text: #1f2937;
       --muted: #6b7280;
       --brand: #0f766e;
@@ -58,17 +57,8 @@
       flex-wrap: wrap;
     }
 
-    .hero h1 {
-      margin: 0 0 8px;
-      font-size: clamp(28px, 4vw, 44px);
-      letter-spacing: 0.02em;
-    }
-
-    .hero p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
-    }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); letter-spacing: 0.02em; }
+    .hero p  { margin: 0; color: var(--muted); line-height: 1.7; }
 
     .button {
       border-radius: 999px;
@@ -86,10 +76,7 @@
       color: white;
     }
 
-    .button:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
+    .button:disabled { opacity: 0.6; cursor: default; }
 
     .stats {
       display: grid;
@@ -106,17 +93,8 @@
       box-shadow: var(--shadow);
     }
 
-    .stat span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 26px;
-      margin-top: 6px;
-    }
+    .stat span   { display: block; color: var(--muted); font-size: 13px; }
+    .stat strong { display: block; font-size: 26px; margin-top: 6px; }
 
     .progress {
       height: 10px;
@@ -162,21 +140,9 @@
       transition: transform 0.15s ease, border-color 0.15s ease;
     }
 
-    .chapter-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(15, 118, 110, 0.24);
-    }
-
-    .chapter-card h2 {
-      margin: 10px 0 8px;
-      font-size: 22px;
-    }
-
-    .chapter-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-    }
+    .chapter-card:hover { transform: translateY(-2px); border-color: rgba(15, 118, 110, 0.24); }
+    .chapter-card h2 { margin: 10px 0 8px; font-size: 22px; }
+    .chapter-card p  { margin: 0; color: var(--muted); line-height: 1.65; }
 
     .mini-progress {
       height: 8px;
@@ -208,26 +174,12 @@
       border-bottom: 1px solid var(--line);
     }
 
-    .quiz-header h2 {
-      margin: 8px 0 0;
-      font-size: clamp(24px, 3vw, 32px);
-    }
+    .quiz-header h2 { margin: 8px 0 0; font-size: clamp(24px, 3vw, 32px); }
+    .quiz-header p  { margin: 8px 0 0; color: var(--muted); line-height: 1.7; }
 
-    .quiz-header p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.7;
-    }
+    .chapter-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
-    .chapter-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .quiz-body {
-      padding: 22px;
-    }
+    .quiz-body { padding: 22px; }
 
     .question-card {
       background: rgba(255, 255, 255, 0.76);
@@ -247,17 +199,9 @@
       margin-bottom: 12px;
     }
 
-    .question-title {
-      margin: 0 0 18px;
-      font-size: 20px;
-      line-height: 1.6;
-      font-weight: 700;
-    }
+    .question-title { margin: 0 0 18px; font-size: 20px; line-height: 1.6; font-weight: 700; }
 
-    .option-list {
-      display: grid;
-      gap: 10px;
-    }
+    .option-list { display: grid; gap: 10px; }
 
     .option-item {
       width: 100%;
@@ -273,35 +217,13 @@
       transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
     }
 
-    .option-item:hover:not(:disabled) {
-      transform: translateY(-1px);
-      border-color: rgba(15, 118, 110, 0.25);
-    }
+    .option-item:hover:not(:disabled) { transform: translateY(-1px); border-color: rgba(15, 118, 110, 0.25); }
+    .option-item.selected { border-color: rgba(15, 118, 110, 0.55); background: rgba(15, 118, 110, 0.08); }
+    .option-item.correct  { border-color: rgba(21, 128, 61, 0.55);  background: rgba(220, 252, 231, 0.68); }
+    .option-item.wrong    { border-color: rgba(185, 28, 28, 0.55);  background: rgba(254, 226, 226, 0.72); }
+    .option-item:disabled { cursor: default; }
 
-    .option-item.selected {
-      border-color: rgba(15, 118, 110, 0.55);
-      background: rgba(15, 118, 110, 0.08);
-    }
-
-    .option-item.correct {
-      border-color: rgba(21, 128, 61, 0.55);
-      background: rgba(220, 252, 231, 0.68);
-    }
-
-    .option-item.wrong {
-      border-color: rgba(185, 28, 28, 0.55);
-      background: rgba(254, 226, 226, 0.72);
-    }
-
-    .option-item:disabled {
-      cursor: default;
-    }
-
-    .option-letter {
-      min-width: 28px;
-      font-weight: 800;
-      color: var(--brand);
-    }
+    .option-letter { min-width: 28px; font-weight: 800; color: var(--brand); }
 
     .feedback {
       margin-top: 16px;
@@ -311,25 +233,10 @@
       background: white;
     }
 
-    .feedback.correct {
-      border-color: rgba(21, 128, 61, 0.25);
-      background: rgba(220, 252, 231, 0.68);
-    }
-
-    .feedback.wrong {
-      border-color: rgba(185, 28, 28, 0.25);
-      background: rgba(254, 226, 226, 0.72);
-    }
-
-    .feedback h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-
-    .feedback p {
-      margin: 0 0 8px;
-      line-height: 1.7;
-    }
+    .feedback.correct { border-color: rgba(21, 128, 61, 0.25); background: rgba(220, 252, 231, 0.68); }
+    .feedback.wrong   { border-color: rgba(185, 28, 28, 0.25); background: rgba(254, 226, 226, 0.72); }
+    .feedback h3 { margin: 0 0 8px; font-size: 18px; }
+    .feedback p  { margin: 0 0 8px; line-height: 1.7; }
 
     .summary-box {
       padding: 22px;
@@ -338,16 +245,8 @@
       background: white;
     }
 
-    .summary-box h3 {
-      margin: 0 0 8px;
-      font-size: 24px;
-    }
-
-    .summary-box p {
-      margin: 0 0 16px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
+    .summary-box h3 { margin: 0 0 8px; font-size: 24px; }
+    .summary-box p  { margin: 0 0 16px; color: var(--muted); line-height: 1.7; }
 
     .notice {
       border: 1px solid var(--line);
@@ -358,16 +257,8 @@
       text-align: center;
     }
 
-    .notice h2 {
-      margin: 0 0 10px;
-      font-size: 24px;
-    }
-
-    .notice p {
-      margin: 0 0 12px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
+    .notice h2 { margin: 0 0 10px; font-size: 24px; }
+    .notice p  { margin: 0 0 12px; color: var(--muted); line-height: 1.7; }
 
     .loading-spinner {
       width: 44px;
@@ -379,9 +270,7 @@
       animation: spin 1s linear infinite;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 860px) {
       .app { padding-inline: 14px; }
@@ -414,19 +303,6 @@
         return {};
       }
       return {};
-    }
-
-    function buildReason(chapterTitle, question, answerText) {
-      if (!answerText) return '目前尚未設定正解。';
-      if (/不包括|不屬於|不是/.test(question.question))
-        return `這題在排除不屬於題幹範圍的選項；${answerText} 最符合 ${chapterTitle} 的課堂重點。`;
-      if (/代表人物|是哪位|是哪家|哪個|何者/.test(question.question))
-        return `這題是在對應概念、人物或標準；正解是 ${answerText}。`;
-      if (/核心|重點|主要|目的/.test(question.question))
-        return `題目要抓的是本章核心概念，對應到 ${answerText}。`;
-      if (/反映|體現|顯示|應如何|應對/.test(question.question))
-        return `依題幹情境與本章原則，最符合的是 ${answerText}。`;
-      return `依照課堂定義，正解是 ${answerText}。`;
     }
 
     function getChapterStats(chapter, answers) {
@@ -496,9 +372,7 @@
         <button type="button" className="chapter-card" onClick={() => onOpen(index)}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
             <span className="pill">第 {index + 1} 章</span>
-            <span style={{ fontSize: '13px', color: 'var(--muted)' }}>
-              {stats.answered} / {stats.total} 題
-            </span>
+            <span style={{ fontSize: '13px', color: 'var(--muted)' }}>{stats.answered} / {stats.total} 題</span>
           </div>
           <h2>{chapter.title}</h2>
           <p>答對 {stats.correct} 題，完成度 {stats.progress}%</p>
@@ -513,16 +387,14 @@
     }
 
     function QuestionView({ chapter, chapterIndex, question, questionIndex, selectedAnswer, onChooseAnswer, onNext, onRedo }) {
-      const locked = Boolean(selectedAnswer);
+      const locked    = Boolean(selectedAnswer);
       const isCorrect = selectedAnswer === question.answer;
-      const isLast = questionIndex === chapter.questions.length - 1;
+      const isLast    = questionIndex === chapter.questions.length - 1;
 
       return (
         <div className="question-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
-            <span className="question-number">
-              第 {questionIndex + 1} 題 / {chapter.questions.length}
-            </span>
+            <span className="question-number">第 {questionIndex + 1} 題 / {chapter.questions.length}</span>
             <span style={{ fontSize: '13px', color: 'var(--muted)' }}>章節 {chapterIndex + 1}</span>
           </div>
 
@@ -533,7 +405,8 @@
 
           <div className="option-list">
             {Object.entries(question.options).map(([letter, text]) => {
-              const cls = ['option-item',
+              const cls = [
+                'option-item',
                 selectedAnswer === letter ? 'selected' : '',
                 locked && letter === question.answer ? 'correct' : '',
                 locked && selectedAnswer === letter && selectedAnswer !== question.answer ? 'wrong' : '',
@@ -553,11 +426,12 @@
             <div className={`feedback ${isCorrect ? 'correct' : 'wrong'}`}>
               <h3>{isCorrect ? '✓ 答對了！' : '✗ 答錯了，記住正解'}</h3>
               <p>你的答案：{selectedAnswer}. {question.options[selectedAnswer]}</p>
-              {!isCorrect && <p>正確答案：{question.answer}. {question.options[question.answer]}</p>}
-              <p>
-                <strong>說明：</strong>
-                {question.explanation || buildReason(chapter.title, question, question.options[question.answer])}
-              </p>
+              {!isCorrect && (
+                <p>正確答案：{question.answer}. {question.options[question.answer]}</p>
+              )}
+              {question.explanation && (
+                <p><strong>說明：</strong>{question.explanation}</p>
+              )}
               <div className="chapter-actions" style={{ marginTop: '12px' }}>
                 <button type="button" className="button primary" onClick={onNext}>
                   {isLast ? '完成本章 →' : '下一題 →'}
@@ -571,24 +445,19 @@
     }
 
     function SummaryView({ chapter, chapterStats, hasNextChapter, onNextChapter, onBackHome, onRestart }) {
-      const pct = chapterStats.progress;
+      const pct   = chapterStats.progress;
       const emoji = pct === 100 ? '🎉' : pct >= 60 ? '👍' : '📖';
       return (
         <div className="summary-box">
           <span className="pill">章節完成 {emoji}</span>
           <h3 style={{ marginTop: '12px' }}>{chapter.title}</h3>
-          <p>
-            答對 <strong>{chapterStats.correct}</strong> / {chapterStats.total} 題
-            （{pct}%）
-          </p>
+          <p>答對 <strong>{chapterStats.correct}</strong> / {chapterStats.total} 題（{pct}%）</p>
           <div className="mini-progress">
             <div style={{ width: `${pct}%` }} />
           </div>
           <div className="chapter-actions" style={{ marginTop: '20px' }}>
             {hasNextChapter && (
-              <button type="button" className="button primary" onClick={onNextChapter}>
-                下一章 →
-              </button>
+              <button type="button" className="button primary" onClick={onNextChapter}>下一章 →</button>
             )}
             <button type="button" className="button" onClick={onRestart}>重做本章</button>
             <button type="button" className="button" onClick={onBackHome}>回章節選單</button>
@@ -600,17 +469,15 @@
     // ── 主程式 ────────────────────────────────────────────
 
     function App() {
-      const [chapters, setChapters]   = useState(null);
-      const [loadError, setLoadError] = useState('');
-      const [answers, setAnswers]     = useState(loadSavedAnswers);
-      const [mode, setMode]           = useState('home');
-      const [activeChapterIndex, setActiveChapterIndex]     = useState(0);
-      const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+      const [chapters,              setChapters]              = useState(null);
+      const [loadError,             setLoadError]             = useState('');
+      const [answers,               setAnswers]               = useState(loadSavedAnswers);
+      const [mode,                  setMode]                  = useState('home');
+      const [activeChapterIndex,    setActiveChapterIndex]    = useState(0);
+      const [currentQuestionIndex,  setCurrentQuestionIndex]  = useState(0);
 
-      // 讀取 questions.json
       useEffect(() => {
         let cancelled = false;
-
         fetch('./questions.json', { cache: 'no-store' })
           .then((res) => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -628,7 +495,7 @@
 
         return () => { cancelled = true; };
       }, []);
-
+      
       // 儲存作答進度
       useEffect(() => {
         localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(answers));
@@ -702,29 +569,25 @@
       };
 
       // ── 渲染 ──
-      if (loadError) {
-        return (
-          <div className="app">
-            <ErrorView message={loadError} onRetry={() => window.location.reload()} />
-          </div>
-        );
-      }
+      if (loadError) return (
+        <div className="app">
+          <ErrorView message={loadError} onRetry={() => window.location.reload()} />
+        </div>
+      );
 
-      if (!chapters) {
-        return (
-          <div className="app">
-            <div className="hero">
-              <div className="hero-top">
-                <div>
-                  <h1>倫理與企業社會責任題庫測驗</h1>
-                  <p>正在載入題庫資料⋯</p>
-                </div>
+      if (!chapters) return (
+        <div className="app">
+          <div className="hero">
+            <div className="hero-top">
+              <div>
+                <h1>倫理與企業社會責任題庫測驗</h1>
+                <p>正在載入題庫資料⋯</p>
               </div>
             </div>
-            <LoadingView />
           </div>
-        );
-      }
+          <LoadingView />
+        </div>
+      );
 
       return (
         <div className="app">
@@ -735,9 +598,7 @@
                 <h1>倫理與企業社會責任題庫測驗</h1>
                 <p>選擇章節開始作答，進度自動儲存於瀏覽器。</p>
               </div>
-              <button className="button" type="button" onClick={clearAll}>
-                清除全部作答
-              </button>
+              <button className="button" type="button" onClick={clearAll}>清除全部作答</button>
             </div>
           </header>
 
@@ -785,21 +646,14 @@
                     {mode === 'summary' ? '章節完成' : `章節 ${activeChapterIndex + 1} / ${chapters.length}`}
                   </span>
                   <h2>{activeChapter.title}</h2>
-                  <p>
-                    已作答 {chapterStats.answered} / {chapterStats.total} 題，
-                    答對 {chapterStats.correct} 題
-                  </p>
+                  <p>已作答 {chapterStats.answered} / {chapterStats.total} 題，答對 {chapterStats.correct} 題</p>
                   <div className="mini-progress">
                     <div style={{ width: `${chapterStats.progress}%` }} />
                   </div>
                 </div>
                 <div className="chapter-actions">
-                  <button className="button" type="button" onClick={() => setMode('home')}>
-                    ← 章節選單
-                  </button>
-                  <button className="button" type="button" onClick={() => restartChapter(activeChapterIndex)}>
-                    重做本章
-                  </button>
+                  <button className="button" type="button" onClick={() => setMode('home')}>← 章節選單</button>
+                  <button className="button" type="button" onClick={() => restartChapter(activeChapterIndex)}>重做本章</button>
                 </div>
               </div>
 

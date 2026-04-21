@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>倫理與企業社會責任題庫測驗</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f1e8;
+      --panel: rgba(255, 255, 255, 0.84);
+      --panel-solid: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --brand: #0f766e;
+      --brand-2: #d97706;
+      --line: rgba(31, 41, 55, 0.12);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 32%),
+        radial-gradient(circle at top right, rgba(217, 119, 6, 0.14), transparent 28%),
+        linear-gradient(180deg, #fffdf8 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+
+    .hero {
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: 0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .button {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 12px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: 700;
+      background: white;
+      color: var(--text);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--brand), #115e59);
+      color: white;
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 24px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 26px;
+      margin-top: 6px;
+    }
+
+    .progress {
+      height: 10px;
+      background: rgba(31, 41, 55, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    .progress > div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand), var(--brand-2));
+      transition: width 0.2s ease;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(15, 118, 110, 0.12);
+      color: var(--brand);
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .chapter-card {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .chapter-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(15, 118, 110, 0.24);
+    }
+
+    .chapter-card h2 {
+      margin: 10px 0 8px;
+      font-size: 22px;
+    }
+
+    .chapter-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .mini-progress {
+      height: 8px;
+      background: rgba(31, 41, 55, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .mini-progress > div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand), var(--brand-2));
+    }
+
+    .quiz-shell {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .quiz-header h2 {
+      margin: 8px 0 0;
+      font-size: clamp(24px, 3vw, 32px);
+    }
+
+    .quiz-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .chapter-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .quiz-body {
+      padding: 22px;
+    }
+
+    .question-card {
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .question-number {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(217, 119, 6, 0.14);
+      color: var(--brand-2);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .question-title {
+      margin: 0 0 18px;
+      font-size: 20px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .option-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-item {
+      width: 100%;
+      text-align: left;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(31, 41, 55, 0.12);
+      background: white;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .option-item:hover:not(:disabled) {
+      transform: translateY(-1px);
+      border-color: rgba(15, 118, 110, 0.25);
+    }
+
+    .option-item.selected {
+      border-color: rgba(15, 118, 110, 0.55);
+      background: rgba(15, 118, 110, 0.08);
+    }
+
+    .option-item.correct {
+      border-color: rgba(21, 128, 61, 0.55);
+      background: rgba(220, 252, 231, 0.68);
+    }
+
+    .option-item.wrong {
+      border-color: rgba(185, 28, 28, 0.55);
+      background: rgba(254, 226, 226, 0.72);
+    }
+
+    .option-item:disabled {
+      cursor: default;
+    }
+
+    .option-letter {
+      min-width: 28px;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    .feedback {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .feedback.correct {
+      border-color: rgba(21, 128, 61, 0.25);
+      background: rgba(220, 252, 231, 0.68);
+    }
+
+    .feedback.wrong {
+      border-color: rgba(185, 28, 28, 0.25);
+      background: rgba(254, 226, 226, 0.72);
+    }
+
+    .feedback h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .feedback p {
+      margin: 0 0 8px;
+      line-height: 1.7;
+    }
+
+    .summary-box {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: white;
+    }
+
+    .summary-box h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .summary-box p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .notice {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 32px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .notice h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .notice p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 4px solid rgba(15, 118, 110, 0.15);
+      border-top-color: var(--brand);
+      margin: 0 auto 16px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 860px) {
+      .app { padding-inline: 14px; }
+      .hero { padding: 22px; }
+      .quiz-header, .quiz-body { padding-left: 16px; padding-right: 16px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useEffect, useState } = React;
+
+    const ANSWERS_STORAGE_KEY = 'quiz-answers-v1';
+
+    function questionKey(chapterTitle, number) {
+      return `${chapterTitle}::${number}`;
+    }
+
+    function loadSavedAnswers() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(ANSWERS_STORAGE_KEY) || '{}');
+        if (stored && typeof stored === 'object' && !Array.isArray(stored)) return stored;
+      } catch {
+        return {};
+      }
+      return {};
+    }
+
+    function buildReason(chapterTitle, question, answerText) {
+      if (!answerText) return '目前尚未設定正解。';
+      if (/不包括|不屬於|不是/.test(question.question))
+        return `這題在排除不屬於題幹範圍的選項；${answerText} 最符合 ${chapterTitle} 的課堂重點。`;
+      if (/代表人物|是哪位|是哪家|哪個|何者/.test(question.question))
+        return `這題是在對應概念、人物或標準；正解是 ${answerText}。`;
+      if (/核心|重點|主要|目的/.test(question.question))
+        return `題目要抓的是本章核心概念，對應到 ${answerText}。`;
+      if (/反映|體現|顯示|應如何|應對/.test(question.question))
+        return `依題幹情境與本章原則，最符合的是 ${answerText}。`;
+      return `依照課堂定義，正解是 ${answerText}。`;
+    }
+
+    function getChapterStats(chapter, answers) {
+      let answered = 0, correct = 0;
+      chapter.questions.forEach((q) => {
+        const key = questionKey(chapter.title, q.number);
+        if (answers[key]) answered++;
+        if (answers[key] === q.answer) correct++;
+      });
+      return {
+        total: chapter.questions.length,
+        answered,
+        correct,
+        progress: chapter.questions.length > 0
+          ? Math.round((answered / chapter.questions.length) * 100) : 0,
+      };
+    }
+
+    function getOverallStats(chapters, answers) {
+      let total = 0, answered = 0, correct = 0;
+      chapters.forEach((chapter) => {
+        chapter.questions.forEach((q) => {
+          total++;
+          const key = questionKey(chapter.title, q.number);
+          if (answers[key]) answered++;
+          if (answers[key] === q.answer) correct++;
+        });
+      });
+      return {
+        total, answered, correct,
+        progress: total > 0 ? Math.round((answered / total) * 100) : 0,
+      };
+    }
+
+    function firstUnansweredIndex(chapter, answers) {
+      return chapter.questions.findIndex(
+        (q) => !answers[questionKey(chapter.title, q.number)]
+      );
+    }
+
+    // ── 元件 ──────────────────────────────────────────────
+
+    function LoadingView() {
+      return (
+        <div className="notice">
+          <div className="loading-spinner" />
+          <h2>載入題庫中</h2>
+          <p>正在讀取 questions.json，請稍候⋯</p>
+        </div>
+      );
+    }
+
+    function ErrorView({ message, onRetry }) {
+      return (
+        <div className="notice">
+          <span className="pill">載入失敗</span>
+          <h2 style={{ marginTop: '12px' }}>無法讀取題庫</h2>
+          <p>{message}</p>
+          <p>請確認 <code>questions.json</code> 與 <code>index.html</code> 放在同一目錄，格式正確後重新整理。</p>
+          <button type="button" className="button primary" onClick={onRetry}>重新載入</button>
+        </div>
+      );
+    }
+
+    function ChapterCard({ chapter, index, stats, onOpen }) {
+      return (
+        <button type="button" className="chapter-card" onClick={() => onOpen(index)}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+            <span className="pill">第 {index + 1} 章</span>
+            <span style={{ fontSize: '13px', color: 'var(--muted)' }}>
+              {stats.answered} / {stats.total} 題
+            </span>
+          </div>
+          <h2>{chapter.title}</h2>
+          <p>答對 {stats.correct} 題，完成度 {stats.progress}%</p>
+          <div className="mini-progress">
+            <div style={{ width: `${stats.progress}%` }} />
+          </div>
+          <div style={{ marginTop: '12px', fontWeight: 700, color: 'var(--brand)' }}>
+            {stats.answered === 0 ? '開始作答' : stats.answered === stats.total ? '已完成，點此複習' : '繼續作答'}
+          </div>
+        </button>
+      );
+    }
+
+    function QuestionView({ chapter, chapterIndex, question, questionIndex, selectedAnswer, onChooseAnswer, onNext, onRedo }) {
+      const locked = Boolean(selectedAnswer);
+      const isCorrect = selectedAnswer === question.answer;
+      const isLast = questionIndex === chapter.questions.length - 1;
+
+      return (
+        <div className="question-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
+            <span className="question-number">
+              第 {questionIndex + 1} 題 / {chapter.questions.length}
+            </span>
+            <span style={{ fontSize: '13px', color: 'var(--muted)' }}>章節 {chapterIndex + 1}</span>
+          </div>
+
+          <h3 className="question-title">{question.question}</h3>
+          <p style={{ margin: '0 0 16px', fontSize: '13px', color: 'var(--muted)' }}>
+            點選選項後立即顯示正解與說明，再按下一題繼續。
+          </p>
+
+          <div className="option-list">
+            {Object.entries(question.options).map(([letter, text]) => {
+              const cls = ['option-item',
+                selectedAnswer === letter ? 'selected' : '',
+                locked && letter === question.answer ? 'correct' : '',
+                locked && selectedAnswer === letter && selectedAnswer !== question.answer ? 'wrong' : '',
+              ].filter(Boolean).join(' ');
+
+              return (
+                <button key={letter} type="button" className={cls}
+                  disabled={locked} onClick={() => onChooseAnswer(letter)}>
+                  <span className="option-letter">{letter}.</span>
+                  <span>{text}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {locked && (
+            <div className={`feedback ${isCorrect ? 'correct' : 'wrong'}`}>
+              <h3>{isCorrect ? '✓ 答對了！' : '✗ 答錯了，記住正解'}</h3>
+              <p>你的答案：{selectedAnswer}. {question.options[selectedAnswer]}</p>
+              {!isCorrect && <p>正確答案：{question.answer}. {question.options[question.answer]}</p>}
+              <p>
+                <strong>說明：</strong>
+                {question.explanation || buildReason(chapter.title, question, question.options[question.answer])}
+              </p>
+              <div className="chapter-actions" style={{ marginTop: '12px' }}>
+                <button type="button" className="button primary" onClick={onNext}>
+                  {isLast ? '完成本章 →' : '下一題 →'}
+                </button>
+                <button type="button" className="button" onClick={onRedo}>重新作答</button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function SummaryView({ chapter, chapterStats, hasNextChapter, onNextChapter, onBackHome, onRestart }) {
+      const pct = chapterStats.progress;
+      const emoji = pct === 100 ? '🎉' : pct >= 60 ? '👍' : '📖';
+      return (
+        <div className="summary-box">
+          <span className="pill">章節完成 {emoji}</span>
+          <h3 style={{ marginTop: '12px' }}>{chapter.title}</h3>
+          <p>
+            答對 <strong>{chapterStats.correct}</strong> / {chapterStats.total} 題
+            （{pct}%）
+          </p>
+          <div className="mini-progress">
+            <div style={{ width: `${pct}%` }} />
+          </div>
+          <div className="chapter-actions" style={{ marginTop: '20px' }}>
+            {hasNextChapter && (
+              <button type="button" className="button primary" onClick={onNextChapter}>
+                下一章 →
+              </button>
+            )}
+            <button type="button" className="button" onClick={onRestart}>重做本章</button>
+            <button type="button" className="button" onClick={onBackHome}>回章節選單</button>
+          </div>
+        </div>
+      );
+    }
+
+    // ── 主程式 ────────────────────────────────────────────
+
+    function App() {
+      const [chapters, setChapters]   = useState(null);
+      const [loadError, setLoadError] = useState('');
+      const [answers, setAnswers]     = useState(loadSavedAnswers);
+      const [mode, setMode]           = useState('home');
+      const [activeChapterIndex, setActiveChapterIndex]     = useState(0);
+      const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+      // 讀取 questions.json
+      useEffect(() => {
+        let cancelled = false;
+
+        fetch('./questions.json', { cache: 'no-store' })
+          .then((res) => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+          })
+          .then((data) => {
+            if (cancelled) return;
+            if (!Array.isArray(data) || data.length === 0)
+              throw new Error('questions.json 格式錯誤，應為非空陣列。');
+            setChapters(data);
+          })
+          .catch((err) => {
+            if (!cancelled) setLoadError(err.message || String(err));
+          });
+
+        return () => { cancelled = true; };
+      }, []);
+
+      // 儲存作答進度
+      useEffect(() => {
+        localStorage.setItem(ANSWERS_STORAGE_KEY, JSON.stringify(answers));
+      }, [answers]);
+
+      // ── 衍生值 ──
+      const activeChapter   = chapters ? chapters[activeChapterIndex] : null;
+      const currentQuestion = activeChapter ? activeChapter.questions[currentQuestionIndex] ?? null : null;
+      const currentQId      = activeChapter && currentQuestion
+        ? questionKey(activeChapter.title, currentQuestion.number) : '';
+      const currentSelection = currentQId ? answers[currentQId] || '' : '';
+      const chapterStats     = activeChapter
+        ? getChapterStats(activeChapter, answers)
+        : { total: 0, answered: 0, correct: 0, progress: 0 };
+      const overallStats     = chapters ? getOverallStats(chapters, answers) : null;
+      const hasNextChapter   = chapters ? activeChapterIndex < chapters.length - 1 : false;
+
+      // ── 操作函式 ──
+      const clearAll = () => {
+        if (!window.confirm('確定要清除所有作答紀錄嗎？')) return;
+        setAnswers({});
+        setMode('home');
+        setActiveChapterIndex(0);
+        setCurrentQuestionIndex(0);
+        localStorage.removeItem(ANSWERS_STORAGE_KEY);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      const openChapter = (idx) => {
+        const chapter = chapters[idx];
+        const uIdx = firstUnansweredIndex(chapter, answers);
+        setActiveChapterIndex(idx);
+        setCurrentQuestionIndex(uIdx === -1 ? chapter.questions.length - 1 : uIdx);
+        setMode(uIdx === -1 ? 'summary' : 'quiz');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      const restartChapter = (idx) => {
+        const chapter = chapters[idx];
+        const keys = new Set(chapter.questions.map((q) => questionKey(chapter.title, q.number)));
+        setAnswers((prev) => {
+          const next = {};
+          Object.entries(prev).forEach(([k, v]) => { if (!keys.has(k)) next[k] = v; });
+          return next;
+        });
+        setActiveChapterIndex(idx);
+        setCurrentQuestionIndex(0);
+        setMode('quiz');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      const answerQuestion = (letter) => {
+        if (!currentQuestion || currentSelection) return;
+        setAnswers((prev) => ({ ...prev, [currentQId]: letter }));
+      };
+
+      const clearCurrentAnswer = () => {
+        if (!currentQId) return;
+        setAnswers((prev) => { const n = { ...prev }; delete n[currentQId]; return n; });
+      };
+
+      const goNext = () => {
+        if (!activeChapter) return;
+        if (currentQuestionIndex < activeChapter.questions.length - 1) {
+          setCurrentQuestionIndex((i) => i + 1);
+          setMode('quiz');
+        } else {
+          setMode('summary');
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      // ── 渲染 ──
+      if (loadError) {
+        return (
+          <div className="app">
+            <ErrorView message={loadError} onRetry={() => window.location.reload()} />
+          </div>
+        );
+      }
+
+      if (!chapters) {
+        return (
+          <div className="app">
+            <div className="hero">
+              <div className="hero-top">
+                <div>
+                  <h1>倫理與企業社會責任題庫測驗</h1>
+                  <p>正在載入題庫資料⋯</p>
+                </div>
+              </div>
+            </div>
+            <LoadingView />
+          </div>
+        );
+      }
+
+      return (
+        <div className="app">
+          {/* 頁首 */}
+          <header className="hero">
+            <div className="hero-top">
+              <div>
+                <h1>倫理與企業社會責任題庫測驗</h1>
+                <p>選擇章節開始作答，進度自動儲存於瀏覽器。</p>
+              </div>
+              <button className="button" type="button" onClick={clearAll}>
+                清除全部作答
+              </button>
+            </div>
+          </header>
+
+          {/* 整體統計 */}
+          <section className="stats">
+            <div className="stat"><span>章節數</span><strong>{chapters.length}</strong></div>
+            <div className="stat"><span>題目總數</span><strong>{overallStats.total}</strong></div>
+            <div className="stat"><span>已作答</span><strong>{overallStats.answered}</strong></div>
+            <div className="stat"><span>答對題數</span><strong>{overallStats.correct}</strong></div>
+          </section>
+
+          <div className="progress">
+            <div style={{ width: `${overallStats.progress}%` }} />
+          </div>
+
+          {/* 章節選單 */}
+          {mode === 'home' && (
+            <>
+              <div style={{ marginBottom: '16px' }}>
+                <span className="pill">章節選單</span>
+                <p style={{ margin: '10px 0 0', color: 'var(--muted)', lineHeight: 1.7 }}>
+                  選一個章節開始，系統會自動跳到上次未作答的題目。
+                </p>
+              </div>
+              <div className="home-grid">
+                {chapters.map((chapter, index) => (
+                  <ChapterCard
+                    key={chapter.title}
+                    chapter={chapter}
+                    index={index}
+                    stats={getChapterStats(chapter, answers)}
+                    onOpen={openChapter}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* 測驗介面 */}
+          {mode !== 'home' && activeChapter && (
+            <div className="quiz-shell">
+              <div className="quiz-header">
+                <div>
+                  <span className="pill">
+                    {mode === 'summary' ? '章節完成' : `章節 ${activeChapterIndex + 1} / ${chapters.length}`}
+                  </span>
+                  <h2>{activeChapter.title}</h2>
+                  <p>
+                    已作答 {chapterStats.answered} / {chapterStats.total} 題，
+                    答對 {chapterStats.correct} 題
+                  </p>
+                  <div className="mini-progress">
+                    <div style={{ width: `${chapterStats.progress}%` }} />
+                  </div>
+                </div>
+                <div className="chapter-actions">
+                  <button className="button" type="button" onClick={() => setMode('home')}>
+                    ← 章節選單
+                  </button>
+                  <button className="button" type="button" onClick={() => restartChapter(activeChapterIndex)}>
+                    重做本章
+                  </button>
+                </div>
+              </div>
+
+              <div className="quiz-body">
+                {mode === 'summary' || !currentQuestion ? (
+                  <SummaryView
+                    chapter={activeChapter}
+                    chapterStats={chapterStats}
+                    hasNextChapter={hasNextChapter}
+                    onNextChapter={() => openChapter(activeChapterIndex + 1)}
+                    onBackHome={() => setMode('home')}
+                    onRestart={() => restartChapter(activeChapterIndex)}
+                  />
+                ) : (
+                  <QuestionView
+                    chapter={activeChapter}
+                    chapterIndex={activeChapterIndex}
+                    question={currentQuestion}
+                    questionIndex={currentQuestionIndex}
+                    selectedAnswer={currentSelection}
+                    onChooseAnswer={answerQuestion}
+                    onNext={goNext}
+                    onRedo={clearCurrentAnswer}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

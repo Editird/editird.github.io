@@ -209,6 +209,36 @@ function removeLastPick() {
   }
 }
 
+function normalizeAnswerKey(event) {
+  const raw = event.key;
+
+  if (/^[1-6]$/.test(raw)) {
+    return raw;
+  }
+
+  const fullWidthDigits = "１２３４５６";
+  const fullWidthIndex = fullWidthDigits.indexOf(raw);
+  if (fullWidthIndex !== -1) {
+    return String(fullWidthIndex + 1);
+  }
+
+  if (event.code?.startsWith("Digit")) {
+    const codeKey = event.code.slice(5);
+    if (/^[1-6]$/.test(codeKey)) {
+      return codeKey;
+    }
+  }
+
+  if (event.code?.startsWith("Numpad")) {
+    const codeKey = event.code.slice(6);
+    if (/^[1-6]$/.test(codeKey)) {
+      return codeKey;
+    }
+  }
+
+  return raw.toUpperCase();
+}
+
 function onGlobalKeydown(event) {
   if (!state.data) return;
 
@@ -240,7 +270,7 @@ function onGlobalKeydown(event) {
 
   const question = state.data.questions[state.index];
   const charset = answerCharset(question);
-  const key = event.key.toUpperCase();
+  const key = normalizeAnswerKey(event);
 
   if (charset.includes(key)) {
     event.preventDefault();

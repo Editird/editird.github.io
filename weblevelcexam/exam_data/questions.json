@@ -93,7 +93,7 @@
       "answer": "2",
       "answerType": "single-choice",
       "image": "",
-      "text": "「動態伺 服器網頁」的英文簡稱為何？\n1. CGI\n2. ASP\n3. HTML\n4. DHTML 。",
+      "text": "「動態伺服器網頁」的英文簡稱為何？\n1. CGI\n2. ASP\n3. HTML\n4. DHTML 。",
       "useImage": false,
       "note": ""
     },
@@ -174,7 +174,7 @@
       "section": "single",
       "number": 14,
       "page": 2,
-      "answer": "4",
+      "answer": "1",
       "answerType": "single-choice",
       "image": "",
       "text": "「階層式樣式表」的英文為何？\n1. CSS\n2. CHSS\n3. XLST\n4. XSL 。",
@@ -225,7 +225,7 @@
       "answer": "2",
       "answerType": "single-choice",
       "image": "",
-      "text": "「ISDN 」為何者的英文簡稱？\n1. 廣域網路\n2. 整體服務數位網路\n3. 區域網 路\n4. 加值型網路 。",
+      "text": "「ISDN」為何者的英文簡稱？\n1. 廣域網路\n2. 整體服務數位網路\n3. 區域網 路\n4. 加值型網路 。",
       "useImage": false,
       "note": ""
     },
@@ -1422,10 +1422,10 @@
       "section": "single",
       "number": 118,
       "page": 8,
-      "answer": "1",
+      "answer": "3",
       "answerType": "single-choice",
       "image": "",
-      "text": "在商業銷售模式中，透過線上的促銷或是資訊吸引消費者在線上購物與付 款，進而將線上的消費者轉到線下；此一交易模式係屬於「電子商務」中 的何種模式？\n1. B2C2B\n2. B2B2C\n3. O2O\n4. OMO 。",
+      "text": "在商業銷售模式中，透過線上的促銷或是資訊吸引消費者在線上購物與付款，進而將線上的消費者轉到線下；此一交易模式係屬於「電子商務」中的何種模式？\n1. B2C2B\n2. B2B2C\n3. O2O\n4. OMO 。",
       "useImage": false,
       "note": ""
     },
@@ -1698,7 +1698,7 @@
       "section": "single",
       "number": 141,
       "page": 9,
-      "answer": "1",
+      "answer": "2",
       "answerType": "single-choice",
       "image": "",
       "text": "IPv6 的每組數字是用哪個符號將其隔開的？\n1. ，\n2. ：\n3. ；\n4. ． 。",
@@ -6849,7 +6849,7 @@
       "answer": "4",
       "answerType": "single-choice",
       "image": "",
-      "text": "何者不是選購網路防火牆的重要考慮因素？\n1. 安全\n2. 效能\n3. 價格\n4. 體 積 。",
+      "text": "何者不是選購網路防火牆的重要考慮因素？\n1. 安全\n2. 效能\n3. 價格\n4. 體積 。",
       "useImage": false,
       "note": ""
     },
@@ -7077,7 +7077,7 @@
       "answer": "2",
       "answerType": "single-choice",
       "image": "",
-      "text": "「電腦病毒」為？\n1. 破壞硬體的細菌\n2. 破壞電腦運作的程式\n3. 感染黴菌 的資料\n4. 毒藥 。",
+      "text": "「電腦病毒」為？\n1. 破壞硬體的細菌\n2. 破壞電腦運作的程式\n3. 感染黴菌的資料\n4. 毒藥 。",
       "useImage": false,
       "note": ""
     },
@@ -7209,7 +7209,7 @@
       "answer": "2",
       "answerType": "single-choice",
       "image": "",
-      "text": "電腦病毒的發作起因為何？\n1. 操作不當\n2. 程式產生\n3. 記憶體突變\n4. 細菌 感染 。",
+      "text": "電腦病毒的發作起因為何？\n1. 操作不當\n2. 程式產生\n3. 記憶體突變\n4. 細菌感染 。",
       "useImage": false,
       "note": ""
     },
@@ -7233,7 +7233,7 @@
       "answer": "3",
       "answerType": "single-choice",
       "image": "",
-      "text": "關於「電腦設備」之管理何者錯誤？\n1. 所有設備專人管理\n2. 定期保養設 備\n3. 允許使用者因個人方便隨意搬移設備\n4. 使用電源穩壓器 。",
+      "text": "關於「電腦設備」之管理何者錯誤？\n1. 所有設備專人管理\n2. 定期保養設備\n3. 允許使用者因個人方便隨意搬移設備\n4. 使用電源穩壓器 。",
       "useImage": false,
       "note": ""
     },
@@ -7245,7 +7245,7 @@
       "answer": "1",
       "answerType": "single-choice",
       "image": "",
-      "text": "何種系統可以確保穩定的電腦電源？\n1. 不斷電系統\n2. 網路系統\n3. 廣播系 統\n4. 保全系統 。",
+      "text": "何種系統可以確保穩定的電腦電源？\n1. 不斷電系統\n2. 網路系統\n3. 廣播系統\n4. 保全系統 。",
       "useImage": false,
       "note": ""
     },
@@ -7257,7 +7257,7 @@
       "answer": "3",
       "answerType": "single-choice",
       "image": "",
-      "text": "不斷電系統（ UPS ）的主要功能為何？\n1. 防毒\n2. 傳送檔案\n3. 維護電源品 質\n4. 通訊協定 。",
+      "text": "不斷電系統（ UPS ）的主要功能為何？\n1. 防毒\n2. 傳送檔案\n3. 維護電源品質\n4. 通訊協定 。",
       "useImage": false,
       "note": ""
     },
@@ -7305,7 +7305,7 @@
       "answer": "1",
       "answerType": "single-choice",
       "image": "",
-      "text": "SSH （ Secure SHell protocol ） 伺服器為較為安全的遠端連線伺服器，其 預設通訊埠號為何？\n1. 22\n2. 53\n3. 80\n4. 110 。",
+      "text": "SSH （ Secure Shell protocol ） 伺服器為較為安全的遠端連線伺服器，其 預設通訊埠號為何？\n1. 22\n2. 53\n3. 80\n4. 110 。",
       "useImage": false,
       "note": ""
     },

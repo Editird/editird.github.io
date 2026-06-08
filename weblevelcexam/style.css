@@ -246,6 +246,26 @@ h2 {
   min-width: 0;
 }
 
+.overview-question-text {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.overview-answer {
+  margin-top: 8px;
+  font-weight: 800;
+  color: var(--accent-2);
+}
+
+.answer-item .controls-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .overview-header {
   display: flex;
   justify-content: space-between;

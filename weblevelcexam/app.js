@@ -336,9 +336,32 @@ function buildAnswerOverview() {
     const item = document.createElement("div");
     item.className = "answer-item";
 
-    const text = document.createElement("span");
-    text.textContent = `第 ${idx + 1} 題（PDF ${question.number}，第 ${question.page} 頁）答案：${question.answer}`;
-    item.appendChild(text);
+    const left = document.createElement("div");
+    left.style.flex = "1";
+
+    const qmeta = document.createElement("div");
+    qmeta.className = "overview-qmeta";
+    qmeta.textContent = `第 ${idx + 1} 題（PDF ${question.number}，第 ${question.page} 頁）`;
+    left.appendChild(qmeta);
+
+    const qtext = document.createElement("pre");
+    qtext.className = "overview-question-text";
+    if (question.useImage) {
+      qtext.textContent = `(圖像題) 圖像位置：${question.image || '無'}；請切換到題目檢視查看圖片。`;
+    } else {
+      qtext.textContent = question.text || "(無題目文字)";
+    }
+    left.appendChild(qtext);
+
+    const ans = document.createElement("div");
+    ans.className = "overview-answer";
+    ans.textContent = `答案：${question.answer}`;
+    left.appendChild(ans);
+
+    item.appendChild(left);
+
+    const right = document.createElement("div");
+    right.className = "controls-right";
 
     const gotoBtn = document.createElement("button");
     gotoBtn.type = "button";
@@ -351,7 +374,9 @@ function buildAnswerOverview() {
       state.index = idx;
       renderQuestion();
     });
-    item.appendChild(gotoBtn);
+    right.appendChild(gotoBtn);
+
+    item.appendChild(right);
 
     fragment.appendChild(item);
   });

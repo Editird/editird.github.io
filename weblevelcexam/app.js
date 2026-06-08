@@ -22,6 +22,10 @@ const jumpSelect = document.getElementById("jumpSelect");
 const jumpBtn = document.getElementById("jumpBtn");
 const doneCard = document.getElementById("doneCard");
 const questionCard = document.getElementById("questionCard");
+const answerOverviewBtn = document.getElementById("answerOverviewBtn");
+const answerOverviewCard = document.getElementById("answerOverviewCard");
+const answerOverviewList = document.getElementById("answerOverviewList");
+const closeOverviewBtn = document.getElementById("closeOverviewBtn");
 const summaryText = document.getElementById("summaryText");
 const restartBtn = document.getElementById("restartBtn");
 
@@ -324,6 +328,49 @@ function nextQuestion() {
   renderQuestion();
 }
 
+function buildAnswerOverview() {
+  answerOverviewList.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+
+  state.data.questions.forEach((question, idx) => {
+    const item = document.createElement("div");
+    item.className = "answer-item";
+
+    const text = document.createElement("span");
+    text.textContent = `第 ${idx + 1} 題（PDF ${question.number}，第 ${question.page} 頁）答案：${question.answer}`;
+    item.appendChild(text);
+
+    const gotoBtn = document.createElement("button");
+    gotoBtn.type = "button";
+    gotoBtn.className = "btn btn-ghost";
+    gotoBtn.textContent = "跳至此題";
+    gotoBtn.addEventListener("click", () => {
+      answerOverviewCard.classList.add("hidden");
+      questionCard.classList.remove("hidden");
+      doneCard.classList.add("hidden");
+      state.index = idx;
+      renderQuestion();
+    });
+    item.appendChild(gotoBtn);
+
+    fragment.appendChild(item);
+  });
+
+  answerOverviewList.appendChild(fragment);
+}
+
+function toggleAnswerOverview(show = true) {
+  if (show) {
+    answerOverviewCard.classList.remove("hidden");
+    questionCard.classList.add("hidden");
+    doneCard.classList.add("hidden");
+  } else {
+    answerOverviewCard.classList.add("hidden");
+    questionCard.classList.remove("hidden");
+    doneCard.classList.add("hidden");
+  }
+}
+
 function restartExam() {
   state.index = 0;
   state.score = 0;
@@ -347,6 +394,7 @@ async function init() {
     jumpSelect.appendChild(opt);
   });
 
+  buildAnswerOverview();
   renderQuestion();
 }
 
@@ -354,6 +402,8 @@ submitBtn.addEventListener("click", submitCurrent);
 nextBtn.addEventListener("click", nextQuestion);
 jumpBtn.addEventListener("click", jumpToSelected);
 restartBtn.addEventListener("click", restartExam);
+answerOverviewBtn.addEventListener("click", () => toggleAnswerOverview(true));
+closeOverviewBtn.addEventListener("click", () => toggleAnswerOverview(false));
 document.addEventListener("keydown", onGlobalKeydown);
 
 init().catch((err) => {

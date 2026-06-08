@@ -222,6 +222,37 @@ h2 {
   margin-top: 16px;
 }
 
+.answer-list {
+  display: grid;
+  gap: 10px;
+  max-height: 60vh;
+  overflow: auto;
+  margin-top: 12px;
+}
+
+.answer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.answer-item span {
+  flex: 1;
+  min-width: 0;
+}
+
+.overview-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
 .btn {
   border: none;
   border-radius: 12px;

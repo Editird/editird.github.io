@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>常態分配 | 統計會考極簡教室</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../assets/js/vendor/katex/katex.min.css">
+    <link rel="stylesheet" href="../assets/styles.css">
+    <script type="module" src="../assets/js/pages/normal.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+    <div class="site-shell">
+      <aside class="sidebar" aria-label="章節導覽">
+        <div class="brand"><strong>統計會考極簡教室</strong><span>常態分配</span></div>
+        <nav class="chapter-nav">
+          <a href="../index.html" data-nav-link>今日焦點</a>
+          <a href="descriptive.html" data-nav-link>描述統計</a>
+          <a href="probability.html" data-nav-link>機率</a>
+          <a href="binomial.html" data-nav-link>二項分配</a>
+          <a href="normal.html" data-nav-link>常態分配</a>
+          <a href="exam-guide.html" data-nav-link>考前總整理</a>
+        </nav>
+      </aside>
+      <header class="mobile-topbar"><strong>常態分配</strong><label>章節<select data-mobile-nav></select></label></header>
+
+      <main id="main" class="main-content">
+        <article class="article">
+          <section class="hero">
+            <span class="eyebrow">考試入口</span>
+            <h1>常態題只做一件事：把 X 轉成 Z。</h1>
+            <p>轉成 Z 後，再判斷題目問小於、大於，還是介於兩數之間。</p>
+          </section>
+
+          <section class="lesson-section">
+            <div class="section-heading">
+              <span class="section-label">手把手解題</span>
+              <h2>大於某個分數</h2>
+            </div>
+            <div data-lesson-root></div>
+          </section>
+
+          <section class="support-grid">
+            <details open>
+              <summary>完整教材重點</summary>
+              <ul class="compact-list">
+                <li>標準化：$Z=\frac{X-\mu}{\sigma}$。</li>
+                <li>小於：直接查 $P(Z&lt;z)$。</li>
+                <li>大於：用 $1-P(Z&lt;z)$。</li>
+                <li>介於：用 $P(Z&lt;z_b)-P(Z&lt;z_a)$。</li>
+                <li>樣本平均題要改用標準誤 $SE=\frac{\sigma}{\sqrt n}$。</li>
+              </ul>
+            </details>
+            <details>
+              <summary>章節練習</summary>
+              <div class="quiz-list" data-practice></div>
+            </details>
+            <details>
+              <summary>考題題解</summary>
+              <div class="exam-list" data-exam-drills></div>
+            </details>
+          </section>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>

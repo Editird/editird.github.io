@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>二項分配 | 統計會考極簡教室</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../assets/js/vendor/katex/katex.min.css">
+    <link rel="stylesheet" href="../assets/styles.css">
+    <script type="module" src="../assets/js/pages/binomial.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+    <div class="site-shell">
+      <aside class="sidebar" aria-label="章節導覽">
+        <div class="brand"><strong>統計會考極簡教室</strong><span>二項分配</span></div>
+        <nav class="chapter-nav">
+          <a href="../index.html" data-nav-link>今日焦點</a>
+          <a href="descriptive.html" data-nav-link>描述統計</a>
+          <a href="probability.html" data-nav-link>機率</a>
+          <a href="binomial.html" data-nav-link>二項分配</a>
+          <a href="normal.html" data-nav-link>常態分配</a>
+          <a href="exam-guide.html" data-nav-link>考前總整理</a>
+        </nav>
+      </aside>
+      <header class="mobile-topbar"><strong>二項分配</strong><label>章節<select data-mobile-nav></select></label></header>
+
+      <main id="main" class="main-content">
+        <article class="article">
+          <section class="hero">
+            <span class="eyebrow">考試入口</span>
+            <h1>看到「固定次數、成功/失敗、剛好 k 次」，就想二項分配。</h1>
+            <p>二項題的主線是抓出 n、p、k、q，然後不要忘記組合數。</p>
+          </section>
+
+          <section class="lesson-section">
+            <div class="section-heading">
+              <span class="section-label">手把手解題</span>
+              <h2>剛好命中 2 次</h2>
+            </div>
+            <div data-lesson-root></div>
+          </section>
+
+          <section class="support-grid">
+            <details open>
+              <summary>完整教材重點</summary>
+              <ul class="compact-list">
+                <li>使用條件：固定 n 次、每次成功率 p 相同、每次獨立、只有成功/失敗。</li>
+                <li>公式：$P(X=k)=\binom{n}{k}p^k(1-p)^{n-k}$。</li>
+                <li>「至少一次」常用補集：$P(X\ge 1)=1-P(X=0)$。</li>
+                <li>只算 $p^kq^{n-k}$ 是某一種順序，完整二項機率還要乘 $\binom{n}{k}$。</li>
+              </ul>
+            </details>
+            <details>
+              <summary>章節練習</summary>
+              <div class="quiz-list" data-practice></div>
+            </details>
+            <details>
+              <summary>考題題解</summary>
+              <div class="exam-list" data-exam-drills></div>
+            </details>
+          </section>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>

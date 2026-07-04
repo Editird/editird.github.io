@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>乙丙級共同科目學科題庫線上複習系統</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="包含職業安全衛生(90006)、工作倫理與職業道德(90007)、環境保護(90008)與節能減碳(90009)之乙丙級共同科目學科檢定題庫線上複習系統。支援測驗模式、複習模式、錯題複習、收藏題庫與模擬考試，支援離線使用與深淺色主題切換。">
+  <meta name="keywords" content="網頁設計丙級, 乙丙級共同科目, 題庫, 職業安全衛生, 工作倫理, 環境保護, 節能減碳">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+
+  <!-- Loading / Splash Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="brand">
+      <div class="brand-logo">Q</div>
+      <div class="brand-title" style="text-align: center;">
+        <h1 style="-webkit-text-fill-color: initial; background: none; color: var(--text-primary);">學科題庫複習系統</h1>
+        <span style="font-size: 0.85rem; color: var(--text-secondary);">職業安全 / 工作倫理 / 環境保護 / 節能減碳</span>
+      </div>
+    </div>
+    <div class="spinner"></div>
+    <div style="font-size: 0.9rem; color: var(--text-secondary);">正在載入 400 題檢定題庫...</div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-logo">Q</div>
+        <div class="brand-title">
+          <h1>學科題庫線上複習系統</h1>
+          <span>乙丙級共同科目複習與模擬檢定</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-icon" title="切換深/淺色主題" aria-label="Theme toggle">
+          <!-- Sun Icon (default invisible in dark) -->
+          <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <!-- Moon Icon (default visible in dark) -->
+          <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Grid Content -->
+    <div class="main-content">
+      
+      <!-- Left Sidebar: Controls & Stats -->
+      <aside class="sidebar">
+        
+        <!-- Mode Select Card -->
+        <div class="card">
+          <div class="card-title">學習模式</div>
+          <div class="mode-selector">
+            <button id="modeStudy" class="mode-btn active" title="直接顯示正確答案，便於快速閱讀記憶">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              <span>複習模式</span>
+            </button>
+            <button id="modeQuiz" class="mode-btn" title="遮蔽答案，點選後提供即時答題對錯回饋">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>測驗模式</span>
+            </button>
+            <button id="modeExam" class="mode-btn" title="模擬檢定考場，限時並於交卷後計算成績與錯題">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              <span>模擬考試</span>
+            </button>
+            <button id="modeMistakes" class="mode-btn" title="練習先前答錯的題目，答對後可移除">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              <span>錯題複習</span>
+            </button>
+            <button id="modeNotes" class="mode-btn" title="整理題目的知識重點與考點摘要，並可對照題庫題目">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>重點速記</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Subject Select Card -->
+        <div class="card" id="subjectCard">
+          <div class="card-title">科目選擇</div>
+          <div class="subject-grid">
+            <button class="subject-btn active" data-subject="all">
+              <div class="subject-btn-left">
+                <span class="subject-indicator indicator-all"></span>
+                <span>全部科目 (400題)</span>
+              </div>
+            </button>
+            <button class="subject-btn" data-subject="90006">
+              <div class="subject-btn-left">
+                <span class="subject-indicator indicator-90006"></span>
+                <span>90006 職業安全衛生</span>
+              </div>
+              <span class="subject-badge">100題</span>
+            </button>
+            <button class="subject-btn" data-subject="90007">
+              <div class="subject-btn-left">
+                <span class="subject-indicator indicator-90007"></span>
+                <span>90007 工作倫理與道德</span>
+              </div>
+              <span class="subject-badge">100題</span>
+            </button>
+            <button class="subject-btn" data-subject="90008">
+              <div class="subject-btn-left">
+                <span class="subject-indicator indicator-90008"></span>
+                <span>90008 環境保護</span>
+              </div>
+              <span class="subject-badge">100題</span>
+            </button>
+            <button class="subject-btn" data-subject="90009">
+              <div class="subject-btn-left">
+                <span class="subject-indicator indicator-90009"></span>
+                <span>90009 節能減碳</span>
+              </div>
+              <span class="subject-badge">100題</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="card" id="statsCard">
+          <div class="card-title">學習進度</div>
+          <div class="stats-list">
+            <div>
+              <div class="stat-item">
+                <span class="stat-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  已答題目
+                </span>
+                <span class="stat-value" id="statsAnswered">0 / 400</span>
+              </div>
+              <div class="progress-track"><div id="progressAnswered" class="progress-bar" style="width: 0%"></div></div>
+            </div>
+            
+            <div>
+              <div class="stat-item">
+                <span class="stat-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-warning);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  我的收藏
+                </span>
+                <span class="stat-value" id="statsBookmarked">0 題</span>
+              </div>
+            </div>
+            
+            <div>
+              <div class="stat-item">
+                <span class="stat-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-error);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  錯題統計
+                </span>
+                <span class="stat-value" id="statsMistakes">0 題</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="stat-item">
+                <span class="stat-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  測驗正確率
+                </span>
+                <span class="stat-value" id="statsAccuracy">0%</span>
+              </div>
+              <div class="progress-track"><div id="progressAccuracy" class="progress-bar" style="width: 0%; background-color: var(--color-success);"></div></div>
+            </div>
+          </div>
+          <button id="clearDataBtn" class="btn-secondary" style="width: 100%; margin-top: 1.25rem; font-size: 0.8rem; padding: 0.4rem 0.75rem; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            清除練習紀錄
+          </button>
+        </div>
+
+        <!-- Exam HUD Sidebar Card (Visible only in Exam mode) -->
+        <div class="card" id="examHudCard" style="display: none;">
+          <div class="card-title">
+            <span>考試資訊</span>
+            <div id="examTimer" class="timer-box">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="timerText">00:00</span>
+            </div>
+          </div>
+          <div class="stats-list">
+            <div class="stat-item">
+              <span class="stat-label">答題進度</span>
+              <span class="stat-value" id="examProgressText">0 / 0</span>
+            </div>
+            <div class="progress-track"><div id="examProgressBar" class="progress-bar" style="width: 0%"></div></div>
+          </div>
+          
+          <div style="margin-top: 1.25rem;">
+            <div class="stat-label" style="font-size: 0.85rem; font-weight:600; margin-bottom:0.5rem;">答題卡快速跳轉</div>
+            <div id="examGrid" class="exam-grid"></div>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem;">
+            <button id="examSubmitBtn" class="btn-primary" style="flex: 1; justify-content: center;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              交卷
+            </button>
+            <button id="examQuitBtn" class="btn-secondary" style="color: var(--color-error); border-color: rgba(239,68,68,0.2);" title="強制結束考試">
+              離開
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Display Panel -->
+      <main class="display-panel">
+        
+        <!-- Search, Filter & Layout bar -->
+        <div class="search-filter-bar" id="searchFilterBar">
+          <div class="search-input-wrapper">
+            <span class="search-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </span>
+            <input type="text" id="searchInput" placeholder="搜尋題目的關鍵字（例如：工資、噪音、化學...）">
+          </div>
+          
+          <label class="filter-checkbox" id="unansweredFilterWrapper">
+            <input type="checkbox" id="filterUnanswered">
+            <span>僅顯示未答題</span>
+          </label>
+          
+          <div class="layout-toggle">
+            <button id="layoutList" class="layout-toggle-btn active" title="列表檢視">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+            <button id="layoutCard" class="layout-toggle-btn" title="卡片單題檢視">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question View Container -->
+        <div id="questionsContainer" class="question-list"></div>
+
+        <!-- Card Layout Navigation Bar -->
+        <div id="cardPagination" class="pagination" style="display: none;">
+          <button id="prevBtn" class="btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            上一題 <span class="shortcut-badge">A</span>
+          </button>
+          <div class="pagination-info" id="paginationInfo">0 / 0</div>
+          <button id="nextBtn" class="btn-primary">
+            下一題 <span class="shortcut-badge">D</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        <!-- Exam Report Card (Visible only when Exam is submitted) -->
+        <div id="examReportCard" class="card exam-summary-card" style="display: none;">
+          <div class="card-title" style="justify-content: center; font-size: 1.25rem;">模擬檢定考試報告</div>
+          
+          <div class="circle-progress-container">
+            <div class="circle-progress">
+              <svg>
+                <circle class="circle-bg" cx="60" cy="60" r="56" />
+                <circle id="examScoreCircle" class="circle-fill" cx="60" cy="60" r="56" />
+              </svg>
+              <div class="circle-text">
+                <span id="examScoreText">0</span>
+                <span>得分</span>
+              </div>
+            </div>
+            <div id="examResultBadge" class="exam-badge pass">合格</div>
+          </div>
+
+          <div class="exam-breakdown">
+            <div class="breakdown-row">
+              <span>測驗時間</span>
+              <span id="examReportTime">0分0秒</span>
+            </div>
+            <div class="breakdown-row">
+              <span>總題數 / 答對數</span>
+              <span id="examReportCount">0 題 / 0 題</span>
+            </div>
+            <div class="breakdown-row">
+              <span>答錯題數 (已自動加入錯題本)</span>
+              <span id="examReportWrong" style="color: var(--color-error); font-weight: 600;">0 題</span>
+            </div>
+            <div class="breakdown-row">
+              <span>正確率</span>
+              <span id="examReportAccuracy">0%</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+            <button id="examReviewBtn" class="btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              檢視答案與解析
+            </button>
+            <button id="examRestartBtn" class="btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              再考一次
+            </button>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Mock Exam Configuration Modal -->
+  <div id="examModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">模擬考試設定</div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="examSubjectSelect">考試範圍</label>
+          <select id="examSubjectSelect">
+            <option value="all">全部共同科目 (400題中抽題)</option>
+            <option value="90006">90006 職業安全衛生 (100題中抽題)</option>
+            <option value="90007">90007 工作倫理與職業道德 (100題中抽題)</option>
+            <option value="90008">90008 環境保護 (100題中抽題)</option>
+            <option value="90009">90009 節能減碳 (100題中抽題)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="examCountSelect">出題數量</label>
+          <select id="examCountSelect">
+            <option value="20">20 題 (快速自我複習)</option>
+            <option value="50" selected>50 題 (精簡模擬檢定)</option>
+            <option value="100">100 題 (完整模擬檢定)</option>
+            <option value="all_sub">該科目全部題目</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="examTimeSelect">考試時間</label>
+          <select id="examTimeSelect">
+            <option value="10">10 分鐘</option>
+            <option value="20">20 分鐘</option>
+            <option value="45" selected>45 分鐘 (標準時間)</option>
+            <option value="60">60 分鐘</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="examCancelBtn" class="btn-secondary">取消</button>
+        <button id="examStartBtn" class="btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          開始考試
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Inspector Modal -->
+  <div id="questionModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0px; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+        <span style="font-weight: 700;">題目詳情</span>
+        <button id="closeQuestionModalBtn" class="btn-icon" style="width: 2rem; height: 2rem;" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="modalQuestionContainer" style="margin-top: 1rem;"></div>
+    </div>
+  </div>
+
+  <!-- Floating Action Buttons -->
+  <div class="fab-container">
+    <button id="scrollTopBtn" class="btn-icon fab" title="回最頂端" style="opacity: 0; pointer-events: none;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+
+  <!-- Load parsed questions and notes data -->
+  <script src="./assets/questions.js"></script>
+  <script src="./assets/notes.js"></script>
+
+  <!-- Application Logic -->
+  <script>
+    // State management
+    const state = {
+      theme: 'dark',
+      currentSubject: 'all',
+      mode: 'study', // 'study', 'quiz', 'exam', 'mistakes', 'bookmarks', 'notes'
+      viewLayout: 'list', // 'list', 'card'
+      searchQuery: '',
+      showOnlyUnanswered: false,
+      cardIndex: 0,
+      
+      // Starred & Mistakes sets (persisted in localStorage)
+      bookmarks: new Set(),
+      mistakes: new Set(),
+      quizAnswers: {}, // id -> chosen option (1-4) for persistent quiz mode response
+      
+      // Mock exam specific state
+      examQuestions: [],
+      examAnswers: {}, // id -> chosen option
+      examSubmitted: false,
+      examTimeLimit: 0, // seconds
+      examTimeSpent: 0, // seconds
+      examTimerInterval: null,
+      examSubject: 'all',
+      examConfiguredCount: 50,
+      
+      // Cached filtered lists
+      filteredQuestions: []
+    };
+
+    // Load data from localStorage
+    function loadUserData() {
+      try {
+        const localTheme = localStorage.getItem('quiz_theme');
+        if (localTheme) {
+          state.theme = localTheme;
+          document.documentElement.setAttribute('data-theme', localTheme);
+        } else {
+          // Detect system dark preference
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          state.theme = prefersDark ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', state.theme);
+        }
+        updateThemeUI();
+
+        const localBookmarks = localStorage.getItem('quiz_bookmarks');
+        if (localBookmarks) {
+          const arr = JSON.parse(localBookmarks);
+          state.bookmarks = new Set(arr);
+        }
+
+        const localMistakes = localStorage.getItem('quiz_mistakes');
+        if (localMistakes) {
+          const arr = JSON.parse(localMistakes);
+          state.mistakes = new Set(arr);
+        }
+
+        const localAnswers = localStorage.getItem('quiz_answers');
+        if (localAnswers) {
+          state.quizAnswers = JSON.parse(localAnswers);
+        }
+      } catch (e) {
+        console.error('Error loading local storage data', e);
+      }
+    }
+
+    // Save data to localStorage
+    function saveUserData() {
+      try {
+        localStorage.setItem('quiz_bookmarks', JSON.stringify([...state.bookmarks]));
+        localStorage.setItem('quiz_mistakes', JSON.stringify([...state.mistakes]));
+        localStorage.setItem('quiz_answers', JSON.stringify(state.quizAnswers));
+      } catch (e) {
+        console.error('Error saving user data', e);
+      }
+    }
+
+    // DOM Elements cache
+    const dom = {
+      loadingScreen: document.getElementById('loadingScreen'),
+      themeToggle: document.getElementById('themeToggle'),
+      sunIcon: document.getElementById('sunIcon'),
+      moonIcon: document.getElementById('moonIcon'),
+      
+      // Modes
+      modeStudy: document.getElementById('modeStudy'),
+      modeQuiz: document.getElementById('modeQuiz'),
+      modeExam: document.getElementById('modeExam'),
+      modeMistakes: document.getElementById('modeMistakes'),
+      modeNotes: document.getElementById('modeNotes'),
+      
+      // Modal inspector
+      questionModal: document.getElementById('questionModal'),
+      closeQuestionModalBtn: document.getElementById('closeQuestionModalBtn'),
+      modalQuestionContainer: document.getElementById('modalQuestionContainer'),
+      
+      // Subject choices
+      subjectButtons: document.querySelectorAll('.subject-btn'),
+      subjectCard: document.getElementById('subjectCard'),
+      
+      // Stats
+      statsCard: document.getElementById('statsCard'),
+      statsAnswered: document.getElementById('statsAnswered'),
+      progressAnswered: document.getElementById('progressAnswered'),
+      statsBookmarked: document.getElementById('statsBookmarked'),
+      statsMistakes: document.getElementById('statsMistakes'),
+      statsAccuracy: document.getElementById('statsAccuracy'),
+      progressAccuracy: document.getElementById('progressAccuracy'),
+      clearDataBtn: document.getElementById('clearDataBtn'),
+      
+      // Exam HUD
+      examHudCard: document.getElementById('examHudCard'),
+      timerText: document.getElementById('timerText'),
+      examProgressText: document.getElementById('examProgressText'),
+      examProgressBar: document.getElementById('examProgressBar'),
+      examGrid: document.getElementById('examGrid'),
+      examSubmitBtn: document.getElementById('examSubmitBtn'),
+      examQuitBtn: document.getElementById('examQuitBtn'),
+      
+      // Exam Modal
+      examModal: document.getElementById('examModal'),
+      examSubjectSelect: document.getElementById('examSubjectSelect'),
+      examCountSelect: document.getElementById('examCountSelect'),
+      examTimeSelect: document.getElementById('examTimeSelect'),
+      examCancelBtn: document.getElementById('examCancelBtn'),
+      examStartBtn: document.getElementById('examStartBtn'),
+      
+      // Display viewport
+      searchFilterBar: document.getElementById('searchFilterBar'),
+      searchInput: document.getElementById('searchInput'),
+      unansweredFilterWrapper: document.getElementById('unansweredFilterWrapper'),
+      filterUnanswered: document.getElementById('filterUnanswered'),
+      layoutList: document.getElementById('layoutList'),
+      layoutCard: document.getElementById('layoutCard'),
+      questionsContainer: document.getElementById('questionsContainer'),
+      cardPagination: document.getElementById('cardPagination'),
+      prevBtn: document.getElementById('prevBtn'),
+      nextBtn: document.getElementById('nextBtn'),
+      paginationInfo: document.getElementById('paginationInfo'),
+      scrollTopBtn: document.getElementById('scrollTopBtn'),
+      
+      // Exam report
+      examReportCard: document.getElementById('examReportCard'),
+      examScoreCircle: document.getElementById('examScoreCircle'),
+      examScoreText: document.getElementById('examScoreText'),
+      examResultBadge: document.getElementById('examResultBadge'),
+      examReportTime: document.getElementById('examReportTime'),
+      examReportCount: document.getElementById('examReportCount'),
+      examReportWrong: document.getElementById('examReportWrong'),
+      examReportAccuracy: document.getElementById('examReportAccuracy'),
+      examReviewBtn: document.getElementById('examReviewBtn'),
+      examRestartBtn: document.getElementById('examRestartBtn')
+    };
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Load user settings
+      loadUserData();
+      
+      // 2. Hide loading screen once data loads
+      if (typeof QUIZ_QUESTIONS !== 'undefined' && QUIZ_QUESTIONS.length > 0) {
+        setTimeout(() => {
+          dom.loadingScreen.style.opacity = 0;
+          setTimeout(() => {
+            dom.loadingScreen.style.display = 'none';
+          }, 500);
+        }, 600);
+      } else {
+        dom.loadingScreen.innerHTML = '<div style="color:var(--color-error); font-weight:700;">題庫載入失敗！請確認 assets/questions.js 是否正確存在。</div>';
+        return;
+      }
+      
+      // 3. Register Event Listeners
+      initEventListeners();
+      
+      // 4. Run first filter and render
+      updateFilters();
+      render();
+    });
+
+    // Toggle Themes
+    function toggleTheme() {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', state.theme);
+      localStorage.setItem('quiz_theme', state.theme);
+      updateThemeUI();
+    }
+
+    function updateThemeUI() {
+      if (state.theme === 'dark') {
+        dom.sunIcon.style.display = 'none';
+        dom.moonIcon.style.display = 'block';
+      } else {
+        dom.sunIcon.style.display = 'block';
+        dom.moonIcon.style.display = 'none';
+      }
+    }
+
+    // Register Event Listeners
+    function initEventListeners() {
+      // Theme Toggle
+      dom.themeToggle.addEventListener('click', toggleTheme);
+
+      // Modes Selector
+      dom.modeStudy.addEventListener('click', () => setMode('study'));
+      dom.modeQuiz.addEventListener('click', () => setMode('quiz'));
+      dom.modeExam.addEventListener('click', showExamConfigModal);
+      dom.modeMistakes.addEventListener('click', () => setMode('mistakes'));
+      dom.modeNotes.addEventListener('click', () => setMode('notes'));
+
+      // Question Modal close
+      dom.closeQuestionModalBtn.addEventListener('click', () => {
+        dom.questionModal.style.display = 'none';
+        activeModalQid = null;
+      });
+      window.addEventListener('click', (e) => {
+        if (e.target === dom.questionModal) {
+          dom.questionModal.style.display = 'none';
+          activeModalQid = null;
+        }
+      });
+
+      // Subject Filter Buttons
+      dom.subjectButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const sub = btn.getAttribute('data-subject');
+          setSubject(sub);
+        });
+      });
+
+      // Clear records
+      dom.clearDataBtn.addEventListener('click', confirmClearData);
+
+      // Search Input
+      dom.searchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value.trim();
+        state.cardIndex = 0;
+        updateFilters();
+        render();
+      });
+
+      // Filter Unanswered
+      dom.filterUnanswered.addEventListener('change', (e) => {
+        state.showOnlyUnanswered = e.target.checked;
+        state.cardIndex = 0;
+        updateFilters();
+        render();
+      });
+
+      // Layout Toggle
+      dom.layoutList.addEventListener('click', () => setLayout('list'));
+      dom.layoutCard.addEventListener('click', () => setLayout('card'));
+
+      // Card Pagination
+      dom.prevBtn.addEventListener('click', cardPrev);
+      dom.nextBtn.addEventListener('click', cardNext);
+
+      // Scroll to Top FAB
+      window.addEventListener('scroll', handleScroll);
+      dom.scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Modal action events
+      dom.examCancelBtn.addEventListener('click', () => { dom.examModal.style.display = 'none'; });
+      dom.examStartBtn.addEventListener('click', startExam);
+      dom.examSubmitBtn.addEventListener('click', () => submitExam(false));
+      dom.examQuitBtn.addEventListener('click', quitExam);
+
+      // Exam report buttons
+      dom.examReviewBtn.addEventListener('click', reviewExamAnswers);
+      dom.examRestartBtn.addEventListener('click', () => {
+        dom.examReportCard.style.display = 'none';
+        showExamConfigModal();
+      });
+
+      // Keyboard Shortcuts
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    // Set layout
+    function setLayout(layout) {
+      if (state.mode === 'exam' && !state.examSubmitted) return; // Force card layout during active exam
+      
+      state.viewLayout = layout;
+      if (layout === 'list') {
+        dom.layoutList.classList.add('active');
+        dom.layoutCard.classList.remove('active');
+        dom.cardPagination.style.display = 'none';
+      } else {
+        dom.layoutList.classList.remove('active');
+        dom.layoutCard.classList.add('active');
+        dom.cardPagination.style.display = 'flex';
+      }
+      render();
+    }
+
+    // Set Mode
+    function setMode(mode) {
+      // Clear exam timer if switching away
+      if (state.mode === 'exam' && state.examTimerInterval) {
+        clearInterval(state.examTimerInterval);
+        state.examTimerInterval = null;
+      }
+
+      state.mode = mode;
+      state.cardIndex = 0;
+
+      // Update UI active states
+      dom.modeStudy.classList.toggle('active', mode === 'study');
+      dom.modeQuiz.classList.toggle('active', mode === 'quiz');
+      dom.modeExam.classList.toggle('active', mode === 'exam');
+      dom.modeMistakes.classList.toggle('active', mode === 'mistakes');
+      dom.modeNotes.classList.toggle('active', mode === 'notes');
+
+      // Adjust side cards visibility
+      dom.subjectCard.style.display = mode === 'mistakes' || mode === 'bookmarks' ? 'none' : 'block';
+      dom.statsCard.style.display = mode === 'exam' ? 'none' : 'block';
+      dom.examHudCard.style.display = mode === 'exam' && !state.examSubmitted ? 'block' : 'none';
+      dom.examReportCard.style.display = 'none';
+
+      // Adjust search & filter bar
+      dom.searchFilterBar.style.display = mode === 'exam' && !state.examSubmitted ? 'none' : 'flex';
+      dom.unansweredFilterWrapper.style.display = mode === 'quiz' ? 'flex' : 'none';
+
+      // Hide layout settings during notes mode
+      const layoutToggle = document.querySelector('.layout-toggle');
+      if (layoutToggle) {
+        layoutToggle.style.display = mode === 'notes' ? 'none' : 'flex';
+      }
+
+      // Reset exam submitted trigger
+      if (mode !== 'exam') {
+        state.examSubmitted = false;
+      }
+
+      updateFilters();
+      render();
+    }
+
+    // Set Subject
+    function setSubject(sub) {
+      state.currentSubject = sub;
+      state.cardIndex = 0;
+
+      dom.subjectButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-subject') === sub);
+      });
+
+      updateFilters();
+      render();
+    }
+
+    // Confirm Clear local data
+    function confirmClearData() {
+      if (confirm('確定要清除所有的練習紀錄、模擬考錯題與收藏資料夾嗎？此動作不可復原。')) {
+        localStorage.removeItem('quiz_bookmarks');
+        localStorage.removeItem('quiz_mistakes');
+        localStorage.removeItem('quiz_answers');
+        state.bookmarks.clear();
+        state.mistakes.clear();
+        state.quizAnswers = {};
+        updateStats();
+        updateFilters();
+        render();
+        alert('已清除所有練習紀錄。');
+      }
+    }
+
+    // Filter questions based on current state (Subject, Search, Mode)
+    function updateFilters() {
+      if (state.mode === 'exam') {
+        // Active exam: use selected exam subset
+        state.filteredQuestions = state.examQuestions;
+        return;
+      }
+
+      let list = QUIZ_QUESTIONS;
+
+      // 1. Filter by subject
+      if (state.mode !== 'mistakes' && state.currentSubject !== 'all') {
+        list = list.filter(q => q.subject_code === state.currentSubject);
+      }
+
+      // 2. Filter by mode specific subsets
+      if (state.mode === 'mistakes') {
+        list = list.filter(q => state.mistakes.has(q.id));
+      } else if (state.mode === 'bookmarks') {
+        list = list.filter(q => state.bookmarks.has(q.id));
+      }
+
+      // 3. Filter by search query
+      if (state.searchQuery) {
+        const query = state.searchQuery.toLowerCase();
+        list = list.filter(q => {
+          const matchQuestion = q.question.toLowerCase().includes(query);
+          const matchOptions = q.options.some(opt => opt.toLowerCase().includes(query));
+          return matchQuestion || matchOptions;
+        });
+      }
+
+      // 4. Filter by unanswered (Quiz mode helper)
+      if (state.mode === 'quiz' && state.showOnlyUnanswered) {
+        list = list.filter(q => !state.quizAnswers[q.id]);
+      }
+
+      state.filteredQuestions = list;
+    }
+
+    // Handle single card navigation
+    function cardPrev() {
+      if (state.cardIndex > 0) {
+        state.cardIndex--;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function cardNext() {
+      if (state.cardIndex < state.filteredQuestions.length - 1) {
+        state.cardIndex++;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Show Scroll to Top FAB
+    function handleScroll() {
+      if (window.scrollY > 400) {
+        dom.scrollTopBtn.style.opacity = 1;
+        dom.scrollTopBtn.style.pointerEvents = 'auto';
+      } else {
+        dom.scrollTopBtn.style.opacity = 0;
+        dom.scrollTopBtn.style.pointerEvents = 'none';
+      }
+    }
+
+    // Keyboard controls in card layout
+    function handleKeyDown(e) {
+      if (state.viewLayout !== 'card') return;
+      if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT') return;
+
+      if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
+        cardPrev();
+      } else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') {
+        cardNext();
+      } else if (['1', '2', '3', '4'].includes(e.key)) {
+        // Answer hotkey
+        const activeQuestion = state.filteredQuestions[state.cardIndex];
+        if (activeQuestion) {
+          const optIndex = parseInt(e.key) - 1;
+          selectAnswer(activeQuestion.id, optIndex + 1);
+        }
+      }
+    }
+
+    // Show Exam Configuration Dialog
+    function showExamConfigModal() {
+      dom.examModal.style.display = 'flex';
+      
+      // Dynamically load options for subject draw count
+      const updateCountOptions = () => {
+        const sub = dom.examSubjectSelect.value;
+        const totalInSub = sub === 'all' ? 400 : 100;
+        
+        // Clear options and rebuild
+        dom.examCountSelect.innerHTML = '';
+        if (totalInSub >= 20) dom.examCountSelect.appendChild(new Option('20 題 (快速自我複習)', '20'));
+        if (totalInSub >= 50) dom.examCountSelect.appendChild(new Option('50 題 (精簡模擬檢定)', '50', false, true));
+        if (totalInSub >= 100) dom.examCountSelect.appendChild(new Option('100 題 (完整模擬檢定)', '100'));
+        dom.examCountSelect.appendChild(new Option(`該科目全部題目 (${totalInSub} 題)`, 'all_sub'));
+      };
+      
+      dom.examSubjectSelect.onchange = updateCountOptions;
+      updateCountOptions();
+    }
+
+    // Start Exam Setup
+    function startExam() {
+      const subject = dom.examSubjectSelect.value;
+      const countCode = dom.examCountSelect.value;
+      const timeMin = parseInt(dom.examTimeSelect.value);
+
+      // Hide modal
+      dom.examModal.style.display = 'none';
+
+      // 1. Gather potential questions
+      let list = QUIZ_QUESTIONS;
+      if (subject !== 'all') {
+        list = list.filter(q => q.subject_code === subject);
+      }
+
+      // Clone and Shuffle
+      list = [...list].sort(() => Math.random() - 0.5);
+
+      // Determine size
+      let drawSize = 50;
+      if (countCode === 'all_sub') {
+        drawSize = list.length;
+      } else {
+        drawSize = Math.min(list.length, parseInt(countCode));
+      }
+
+      // Draw questions
+      state.examQuestions = list.slice(0, drawSize);
+      state.examAnswers = {};
+      state.examSubmitted = false;
+      state.examTimeLimit = timeMin * 60; // seconds
+      state.examTimeSpent = 0;
+      state.cardIndex = 0;
+      state.examSubject = subject;
+      state.examConfiguredCount = drawSize;
+
+      // Swap to Exam Layout
+      state.mode = 'exam';
+      state.viewLayout = 'card'; // Exam mode is single-card layout by standard
+      
+      // Update sidebar states
+      dom.modeStudy.classList.remove('active');
+      dom.modeQuiz.classList.remove('active');
+      dom.modeExam.classList.add('active');
+      dom.modeMistakes.classList.remove('active');
+      
+      dom.subjectCard.style.display = 'none';
+      dom.statsCard.style.display = 'none';
+      dom.examHudCard.style.display = 'block';
+      dom.examReportCard.style.display = 'none';
+      dom.searchFilterBar.style.display = 'none';
+      dom.cardPagination.style.display = 'flex';
+
+      // Timer Initialization
+      if (state.examTimerInterval) clearInterval(state.examTimerInterval);
+      updateTimerDisplay();
+      state.examTimerInterval = setInterval(() => {
+        state.examTimeSpent++;
+        updateTimerDisplay();
+        
+        if (state.examTimeSpent >= state.examTimeLimit) {
+          // Time expired
+          alert('考試時間到！系統已為您自動交卷。');
+          submitExam(true);
+        }
+      }, 1000);
+
+      updateExamProgress();
+      updateFilters();
+      render();
+    }
+
+    // Quit Exam
+    function quitExam() {
+      if (confirm('確定要離開本次模擬考試嗎？您的作答紀錄將不會被保存。')) {
+        if (state.examTimerInterval) {
+          clearInterval(state.examTimerInterval);
+          state.examTimerInterval = null;
+        }
+        setMode('study');
+      }
+    }
+
+    // Submit Exam
+    function submitExam(autoForce = false) {
+      if (!autoForce) {
+        const unansweredCount = state.examQuestions.length - Object.keys(state.examAnswers).length;
+        let msg = '確定要交卷結束本次模擬考試嗎？';
+        if (unansweredCount > 0) {
+          msg = `您還有 ${unansweredCount} 題尚未作答！${msg}`;
+        }
+        if (!confirm(msg)) return;
+      }
+
+      // Stop Timer
+      if (state.examTimerInterval) {
+        clearInterval(state.examTimerInterval);
+        state.examTimerInterval = null;
+      }
+
+      state.examSubmitted = true;
+      dom.examHudCard.style.display = 'none';
+      
+      // Calculate Score
+      let correctCount = 0;
+      state.examQuestions.forEach(q => {
+        const userChoice = state.examAnswers[q.id];
+        if (userChoice === q.answer) {
+          correctCount++;
+        } else {
+          // Add incorrect questions to mistakes database
+          state.mistakes.add(q.id);
+        }
+      });
+      saveUserData();
+
+      const score = Math.round((correctCount / state.examQuestions.length) * 100);
+      const isPass = score >= 60;
+
+      // Update Report Stats in DOM
+      dom.examScoreText.innerText = score;
+      dom.examResultBadge.innerText = isPass ? '檢定合格 (60分及格)' : '未及格 (再接再厲)';
+      dom.examResultBadge.className = `exam-badge ${isPass ? 'pass' : 'fail'}`;
+
+      const minSpent = Math.floor(state.examTimeSpent / 60);
+      const secSpent = state.examTimeSpent % 60;
+      dom.examReportTime.innerText = `${minSpent} 分 ${secSpent} 秒`;
+      dom.examReportCount.innerText = `${state.examQuestions.length} 題 / 答對 ${correctCount} 題`;
+      dom.examReportWrong.innerText = `${state.examQuestions.length - correctCount} 題`;
+      
+      const accuracy = Math.round((correctCount / state.examQuestions.length) * 100) || 0;
+      dom.examReportAccuracy.innerText = `${accuracy}%`;
+
+      // Render Circle Progress Chart
+      const circleFill = dom.examScoreCircle;
+      const circumference = 2 * Math.PI * 56; // 351.85
+      const offset = circumference - (score / 100) * circumference;
+      circleFill.style.strokeDashoffset = offset;
+
+      // Display Report View & Hide cards pagination
+      dom.questionsContainer.innerHTML = '';
+      dom.cardPagination.style.display = 'none';
+      dom.examReportCard.style.display = 'block';
+      
+      // Update global sidebar progress
+      updateStats();
+    }
+
+    // Review exam choices in list mode
+    function reviewExamAnswers() {
+      dom.examReportCard.style.display = 'none';
+      state.viewLayout = 'list';
+      dom.searchFilterBar.style.display = 'flex'; // show filter bar again for searching review
+      dom.unansweredFilterWrapper.style.display = 'none'; // hide unanswered checkbox
+      
+      // Render questions with review decorators
+      render();
+    }
+
+    // Update timer display values
+    function updateTimerDisplay() {
+      const remaining = Math.max(0, state.examTimeLimit - state.examTimeSpent);
+      const min = Math.floor(remaining / 60);
+      const sec = remaining % 60;
+      const displayStr = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+      dom.timerText.innerText = displayStr;
+
+      // Warning color if time is running out (less than 1 minute)
+      if (remaining <= 60) {
+        dom.timerText.parentElement.style.color = 'var(--color-error)';
+        dom.timerText.parentElement.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+      } else {
+        dom.timerText.parentElement.style.color = '';
+        dom.timerText.parentElement.style.borderColor = '';
+      }
+    }
+
+    // Update exam HUD progress
+    function updateExamProgress() {
+      const total = state.examQuestions.length;
+      const answered = Object.keys(state.examAnswers).length;
+      dom.examProgressText.innerText = `${answered} / ${total}`;
+      const pct = (answered / total) * 100;
+      dom.examProgressBar.style.width = `${pct}%`;
+
+      // Draw Exam grid cell map
+      dom.examGrid.innerHTML = '';
+      state.examQuestions.forEach((q, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'exam-grid-cell';
+        cell.innerText = idx + 1;
+        
+        if (state.cardIndex === idx) cell.classList.add('current');
+        if (state.examAnswers[q.id]) cell.classList.add('answered');
+
+        cell.addEventListener('click', () => {
+          state.cardIndex = idx;
+          render();
+        });
+        dom.examGrid.appendChild(cell);
+      });
+    }
+
+    // Update general learning stats in sidebar
+    function updateStats() {
+      // Calculate answered questions
+      const answeredIds = Object.keys(state.quizAnswers).length;
+      dom.statsAnswered.innerText = `${answeredIds} / 400`;
+      const answeredPct = (answeredIds / 400) * 100;
+      dom.progressAnswered.style.width = `${answeredPct}%`;
+
+      // Starred
+      dom.statsBookmarked.innerText = `${state.bookmarks.size} 題`;
+
+      // Mistakes
+      dom.statsMistakes.innerText = `${state.mistakes.size} 題`;
+
+      // Accuracy: we estimate it based on quiz answers compared to actual answers
+      let correctQuiz = 0;
+      let totalAnsweredQuiz = 0;
+      for (const [qid, choice] of Object.entries(state.quizAnswers)) {
+        const question = QUIZ_QUESTIONS.find(q => q.id === qid);
+        if (question) {
+          totalAnsweredQuiz++;
+          if (question.answer === choice) {
+            correctQuiz++;
+          }
+        }
+      }
+
+      const accPct = totalAnsweredQuiz > 0 ? Math.round((correctQuiz / totalAnsweredQuiz) * 100) : 0;
+      dom.statsAccuracy.innerText = `${accPct}%`;
+      dom.progressAccuracy.style.width = `${accPct}%`;
+    }
+
+    // Handle option click (Quiz / Exam / Study)
+    function selectAnswer(qid, optIndex) {
+      if (state.mode === 'exam') {
+        if (state.examSubmitted) return; // Cannot modify after submit
+        
+        state.examAnswers[qid] = optIndex;
+        updateExamProgress();
+        render();
+        return;
+      }
+
+      // Quiz or mistakes review mode
+      if (state.mode === 'quiz' || state.mode === 'mistakes') {
+        // Toggle selected choice. If already answered, let them change it.
+        const prevAnswered = !!state.quizAnswers[qid];
+        state.quizAnswers[qid] = optIndex;
+
+        const question = QUIZ_QUESTIONS.find(q => q.id === qid);
+        if (question) {
+          if (question.answer === optIndex) {
+            // Correct!
+            // If we are in mistakes book review, correct answer clears it from mistakes!
+            if (state.mode === 'mistakes') {
+              state.mistakes.delete(qid);
+            }
+          } else {
+            // Incorrect! Add to mistakes book
+            state.mistakes.add(qid);
+          }
+        }
+
+        saveUserData();
+        updateStats();
+        render();
+      }
+      
+      // Re-render modal question if active
+      if (activeModalQid === qid && dom.questionModal.style.display === 'flex') {
+        showQuestionDetail(qid);
+      }
+    }
+
+    // Star/Bookmark question toggle
+    function toggleBookmark(qid, e) {
+      e.stopPropagation();
+      if (state.bookmarks.has(qid)) {
+        state.bookmarks.delete(qid);
+      } else {
+        state.bookmarks.add(qid);
+      }
+      saveUserData();
+      updateStats();
+      
+      // Animate star scale
+      const starBtn = e.currentTarget;
+      starBtn.classList.toggle('active', state.bookmarks.has(qid));
+      starBtn.style.transform = 'scale(1.35)';
+      setTimeout(() => { starBtn.style.transform = ''; }, 200);
+
+      // In bookmarks mode, if unstarred, we re-filter and re-render
+      if (state.mode === 'bookmarks') {
+        updateFilters();
+        if (state.cardIndex >= state.filteredQuestions.length) {
+          state.cardIndex = Math.max(0, state.filteredQuestions.length - 1);
+        }
+        render();
+      }
+
+      // Re-render modal question if active
+      if (activeModalQid === qid && dom.questionModal.style.display === 'flex') {
+        showQuestionDetail(qid);
+      }
+    }
+
+    let activeModalQid = null;
+    function showQuestionDetail(qid) {
+      activeModalQid = qid;
+      const q = QUIZ_QUESTIONS.find(item => item.id === qid);
+      if (!q) return;
+      
+      dom.modalQuestionContainer.innerHTML = '';
+      
+      const tempMode = state.mode;
+      if (state.mode === 'notes') {
+        state.mode = 'quiz'; // Force interactive quiz card in detail view
+      }
+      
+      const qNode = createQuestionNode(q, 0);
+      state.mode = tempMode;
+      
+      dom.modalQuestionContainer.appendChild(qNode);
+      dom.questionModal.style.display = 'flex';
+    }
+
+    function renderNotes() {
+      dom.questionsContainer.innerHTML = '';
+      
+      const notesContainer = document.createElement('div');
+      notesContainer.className = 'notes-container';
+      
+      let data = QUIZ_NOTES;
+      if (state.currentSubject !== 'all') {
+        data = data.filter(s => s.subject_code === state.currentSubject);
+      }
+      
+      let renderedAny = false;
+      
+      data.forEach(sub => {
+        let filteredCats = [];
+        
+        sub.categories.forEach(cat => {
+          let filteredPoints = cat.points;
+          
+          if (state.searchQuery) {
+            const query = state.searchQuery.toLowerCase();
+            filteredPoints = cat.points.filter(pt => 
+              pt.title.toLowerCase().includes(query) || 
+              pt.summary.toLowerCase().includes(query) ||
+              cat.category.toLowerCase().includes(query)
+            );
+          }
+          
+          if (filteredPoints.length > 0) {
+            filteredCats.push({
+              category: cat.category,
+              points: filteredPoints
+            });
+          }
+        });
+        
+        if (filteredCats.length === 0) return;
+        renderedAny = true;
+        
+        const subCard = document.createElement('div');
+        subCard.className = `card notes-subject-card subject-${sub.subject_code}`;
+        
+        let html = `
+          <div class="notes-subject-header">
+            <span class="subject-indicator indicator-${sub.subject_code}"></span>
+            <span>${sub.subject_code} ${sub.subject_name}</span>
+          </div>
+          <div class="notes-category-section">
+        `;
+        
+        filteredCats.forEach(cat => {
+          html += `
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div class="notes-category-title">${cat.category}</div>
+              <div class="notes-points-grid">
+          `;
+          
+          cat.points.forEach(pt => {
+            html += `
+              <div class="notes-point-card">
+                <div class="notes-point-title">${pt.title}</div>
+                <div class="notes-point-summary">${pt.summary}</div>
+                <div class="notes-point-questions">
+                  <span class="notes-q-label">相關考題：</span>
+            `;
+            
+            if (pt.questions.length === 0) {
+              html += `<span style="font-size:0.75rem; color:var(--text-muted);">無直接對應題</span>`;
+            } else {
+              pt.questions.forEach(qid => {
+                const qNum = qid.split('_')[1];
+                html += `<button class="notes-q-pill subject-${sub.subject_code}" data-qid="${qid}">#${qNum}</button>`;
+              });
+            }
+            
+            html += `
+                </div>
+              </div>
+            `;
+          });
+          
+          html += `
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div>`;
+        subCard.innerHTML = html;
+        
+        subCard.querySelectorAll('.notes-q-pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            const qid = pill.getAttribute('data-qid');
+            showQuestionDetail(qid);
+          });
+        });
+        
+        notesContainer.appendChild(subCard);
+      });
+      
+      if (!renderedAny) {
+        renderEmptyState();
+        return;
+      }
+      
+      dom.questionsContainer.appendChild(notesContainer);
+    }
+
+    // Primary Render
+    function render() {
+      // If notes mode, render notes and return
+      if (state.mode === 'notes') {
+        renderNotes();
+        dom.cardPagination.style.display = 'none';
+        return;
+      }
+
+      // 1. Check if the list is empty
+      if (state.filteredQuestions.length === 0) {
+        renderEmptyState();
+        dom.cardPagination.style.display = 'none';
+        return;
+      }
+
+      // 2. Render List or Card view
+      if (state.viewLayout === 'list') {
+        dom.cardPagination.style.display = 'none';
+        
+        // Render all questions in list view
+        dom.questionsContainer.innerHTML = '';
+        state.filteredQuestions.forEach((q, idx) => {
+          dom.questionsContainer.appendChild(createQuestionNode(q, idx));
+        });
+      } else {
+        // Render single card view
+        dom.cardPagination.style.display = 'flex';
+        
+        // Keep bounds
+        if (state.cardIndex < 0) state.cardIndex = 0;
+        if (state.cardIndex >= state.filteredQuestions.length) {
+          state.cardIndex = state.filteredQuestions.length - 1;
+        }
+
+        // Update pagination text
+        dom.paginationInfo.innerText = `${state.cardIndex + 1} / ${state.filteredQuestions.length}`;
+        dom.prevBtn.disabled = state.cardIndex === 0;
+        dom.nextBtn.disabled = state.cardIndex === state.filteredQuestions.length - 1;
+
+        // Render card
+        dom.questionsContainer.innerHTML = '';
+        const q = state.filteredQuestions[state.cardIndex];
+        if (q) {
+          dom.questionsContainer.appendChild(createQuestionNode(q, state.cardIndex));
+        }
+
+        // Sync exam progress cell highlighted selection
+        if (state.mode === 'exam' && !state.examSubmitted) {
+          updateExamProgress();
+        }
+      }
+    }
+
+    // Render Empty State
+    function renderEmptyState() {
+      let icon = '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>';
+      let title = '無搜尋結果';
+      let desc = '請嘗試輸入其他關鍵字。';
+
+      if (state.mode === 'mistakes') {
+        icon = '<circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>';
+        title = '錯題本空空如也！';
+        desc = '表現真棒！您沒有任何答錯的題目。';
+      } else if (state.mode === 'bookmarks') {
+        icon = '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>';
+        title = '收藏夾尚未有題目';
+        desc = '在題目卡片右上角點選 ★ 號，可將困難題目收藏至此。';
+      }
+
+      dom.questionsContainer.innerHTML = `
+        <div class="card empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            ${icon}
+          </svg>
+          <div class="empty-state-title">${title}</div>
+          <div style="font-size: 0.85rem; max-width: 300px;">${desc}</div>
+        </div>
+      `;
+    }
+
+    // Helper: Create HTML question DOM node
+    function createQuestionNode(q, index) {
+      const qCard = document.createElement('div');
+      qCard.className = 'card q-card';
+      
+      // Meta headers
+      const subjectTagColor = `var(--color-${q.subject_code})`;
+      const subjectNameMap = {
+        '90006': '職業安全',
+        '90007': '工作倫理',
+        '90008': '環境保護',
+        '90009': '節能減碳'
+      };
+      
+      const isStarred = state.bookmarks.has(q.id);
+      
+      qCard.innerHTML = `
+        <div class="q-header">
+          <div class="q-meta">
+            <span class="tag-subject" style="background-color: ${subjectTagColor};">${subjectNameMap[q.subject_code]}</span>
+            <span class="tag-id">題號 ${q.number}</span>
+          </div>
+          <button class="q-starred ${isStarred ? 'active' : ''}" title="${isStarred ? '取消收藏' : '加入收藏'}" aria-label="Bookmark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="q-text">${q.question}</div>
+        <div class="options-grid"></div>
+      `;
+
+      // Hook bookmark click
+      qCard.querySelector('.q-starred').addEventListener('click', (e) => toggleBookmark(q.id, e));
+
+      const optionsGrid = qCard.querySelector('.options-grid');
+      
+      // Determine answers states depending on learning modes
+      let userChoice = null;
+      let showAnswers = false;
+      let examReview = false;
+
+      if (state.mode === 'study') {
+        showAnswers = true;
+      } else if (state.mode === 'quiz' || state.mode === 'mistakes') {
+        userChoice = state.quizAnswers[q.id] || null;
+        showAnswers = !!userChoice;
+      } else if (state.mode === 'exam') {
+        userChoice = state.examAnswers[q.id] || null;
+        showAnswers = state.examSubmitted;
+        examReview = state.examSubmitted;
+      }
+
+      q.options.forEach((optHtml, oIdx) => {
+        const optNum = oIdx + 1;
+        const optBtn = document.createElement('button');
+        optBtn.className = 'opt-btn';
+        
+        // Populate text content (rendered as innerHTML to preserve layout and image tags)
+        optBtn.innerHTML = `
+          <span class="opt-prefix">${optNum}</span>
+          <div class="opt-content">${optHtml}</div>
+        `;
+
+        // Style calculations
+        if (showAnswers) {
+          optBtn.classList.add('disabled');
+          
+          if (optNum === q.answer) {
+            optBtn.classList.add('correct');
+          } else if (userChoice === optNum) {
+            optBtn.classList.add('incorrect');
+          }
+        } else {
+          // active state style during exam or quiz selection
+          if (userChoice === optNum) {
+            optBtn.classList.add('selected');
+          }
+          
+          optBtn.addEventListener('click', () => selectAnswer(q.id, optNum));
+        }
+
+        optionsGrid.appendChild(optBtn);
+      });
+
+      // Show explanatory block if appropriate
+      if (showAnswers) {
+        const feedbackBlock = document.createElement('div');
+        
+        if (state.mode === 'study') {
+          feedbackBlock.className = 'q-feedback correct';
+          feedbackBlock.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top: 1px;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <div><strong>標準答案：選項 (${q.answer})</strong></div>
+          `;
+        } else {
+          const isCorrect = userChoice === q.answer;
+          feedbackBlock.className = `q-feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+          
+          if (isCorrect) {
+            feedbackBlock.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top: 1px;"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <div><strong>答對了！標準答案為選項 (${q.answer})。</strong></div>
+            `;
+          } else {
+            feedbackBlock.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top: 1px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              <div><strong>回答錯誤。</strong> 您選擇的答案是 (${userChoice || '未作答'})，標準答案為選項 (${q.answer})。</div>
+            `;
+          }
+        }
+        qCard.appendChild(feedbackBlock);
+      }
+
+      return qCard;
+    }
+  </script>
+</body>
+</html>
